@@ -1,8 +1,5 @@
 package com.bakeoff.api.service;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import com.bakeoff.api.dto.BakeoffDto;
 import com.bakeoff.api.dto.BakeoffResponseDto;
 import com.bakeoff.api.dto.ParticipantDto;
@@ -18,6 +15,7 @@ import com.bakeoff.api.repositories.ParticipantRepository;
 import com.bakeoff.api.repositories.ResultRepository;
 import java.time.Clock;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import mockit.Expectations;
 import mockit.Injectable;
@@ -25,6 +23,8 @@ import mockit.Tested;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class ApiServiceImplTest {
 
@@ -130,4 +130,111 @@ class ApiServiceImplTest {
       );
     }
   }
-}
+    @Test
+    @DisplayName("When there is multiple bakeoffs, ensure the latest is returned")
+    void latestBakeoffReturned(
+            @Injectable ResultRepository resultRepository,
+            @Injectable BakeoffRepistory bakeoffRepistory,
+            @Injectable JudgeRepository judgeRepository,
+            @Injectable BakerRepository bakerRepository,
+            @Injectable ParticipantRepository participantRepository,
+            @Injectable Clock clock,
+            @Tested ApiServiceImpl apiService
+    ) {
+    
+      Judge judge1 = createJudge(1, "Zach");
+      Judge judge2 = createJudge(2, "Bella");
+    
+      Baker baker1 = createBaker(1, "Callum");
+      Baker baker2 = createBaker(2, "Harry");
+    
+      Bakeoff bakeoff = Bakeoff.builder()
+              .boDate(LocalDate.of(2022, 1, 1))
+              .food("Cheesecake")
+              .boDate(LocalDate.of(2022, 2, 18))
+              .food("Hot Cross Buns")
+              .build();
+    
+      Participant participant1 = createParticipant(1, 1, "Vanilla", baker1, bakeoff);
+      Participant participant2 = createParticipant(2, 2, "Lemon", baker2, bakeoff);
+      bakeoff.setParticipants(List.of(participant1, participant2));
+    
+      Result result1 = createResult(1, participant1, judge1, 10, 5);
+      Result result2 = createResult(2, participant1, judge2, 9, 4);
+      Result result3 = createResult(3, participant2, judge1, 8, 3);
+      Result result4 = createResult(4, participant2, judge2, 7, 2);
+      participant1.setResults(List.of(result1, result2));
+      participant2.setResults(List.of(result3, result4));
+    
+      List<Bakeoff> bakeoffs = List.of(bakeoff);
+    
+      new Expectations() {{
+        bakeoffRepistory.findAll();
+        result = bakeoffs;
+      }};
+    
+      BakeoffResponseDto actual = apiService.getLatestBakeoff();
+      assertEquals(1, actual.getBakeoffs().size());
+    
+      BakeoffDto response = actual.getBakeoffs().get(0);
+      assertAll(
+              () -> assertEquals(LocalDate.of(2022, 2, 18), response.getDate()),
+              () -> assertEquals("Hot Cross Buns", response.getTitle()),
+              () -> assertEquals(2, response.getParticipants().size())
+      );
+    
+      ParticipantDto p1 = response.getParticipants().get(0);
+      ParticipantDto p2 = response.getParticipants().get(1);
+      assertAll(
+              () -> assertEquals(1, p1.getEntrantId()),
+              () -> assertEquals("Callum", p1.getName()),
+              () -> assertEquals(2, p1.getResults().size()),
+              () -> assertEquals(2, p2.getEntrantId()),
+              () -> assertEquals("Harry", p2.getName()),
+              () -> assertEquals(2, p2.getResults().size())
+      );
+    }
+  @Test
+  @DisplayName("When there is no bakeoff, ensure nothing is returned")
+  void zeroBakeoffReturned(
+          @Injectable ResultRepository resultRepository,
+          @Injectable BakeoffRepistory bakeoffRepistory,
+          @Injectable JudgeRepository judgeRepository,
+          @Injectable BakerRepository bakerRepository,
+          @Injectable ParticipantRepository participantRepository,
+          @Injectable Clock clock,
+          @Tested ApiServiceImpl apiService
+  ) {
+
+    Bakeoff bakeoff = Bakeoff.builder()
+            .build();
+
+    Judge judge1 = createJudge(1, "Zach");
+    Judge judge2 = createJudge(2, "Bella");
+
+    Baker baker1 = createBaker(1, "Callum");
+    Baker baker2 = createBaker(2, "Harry");
+    
+    Participant participant1 = createParticipant(1, 1, "Vanilla", baker1, bakeoff);
+    Participant participant2 = createParticipant(2, 2, "Lemon", baker2, bakeoff);
+    bakeoff.setParticipants(List.of(participant1, participant2));
+
+    Result result1 = createResult(1, participant1, judge1, 10, 5);
+    Result result2 = createResult(2, participant1, judge2, 9, 4);
+    Result result3 = createResult(3, participant2, judge1, 8, 3);
+    Result result4 = createResult(4, participant2, judge2, 7, 2);
+    participant1.setResults(List.of(result1, result2));
+    participant2.setResults(List.of(result3, result4));
+
+    List<Bakeoff> bakeoffs = List.of(bakeoff);
+
+    new Expectations() {{
+      bakeoffRepistory.findAll();
+      result = Collections.emptyList();
+    }};
+
+    BakeoffResponseDto actual = apiService.getLatestBakeoff();
+    assertEquals(0, actual.getBakeoffs().size());
+  }
+  }
+  
