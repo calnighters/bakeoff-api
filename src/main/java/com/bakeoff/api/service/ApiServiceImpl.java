@@ -16,6 +16,7 @@ import com.bakeoff.api.repositories.ParticipantRepository;
 import com.bakeoff.api.repositories.ResultRepository;
 import java.time.Clock;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -77,7 +78,12 @@ public class ApiServiceImpl implements ApiService {
         .sorted(Comparator.comparing(Bakeoff::getBoDate))
         .collect(Collectors.toList());
 
-    List<BakeoffDto> bakeoffDtos = List.of(bakeoffToDto(bakeoffs.get(bakeoffs.size() - 1)));
+    List<BakeoffDto> bakeoffDtos;
+    if (!bakeoffs.isEmpty()) {
+      bakeoffDtos = List.of(bakeoffToDto(bakeoffs.get(bakeoffs.size() - 1)));
+    } else {
+      bakeoffDtos = Collections.emptyList();
+    }
 
     return BakeoffResponseDto.builder()
         .bakeoffs(bakeoffDtos)
