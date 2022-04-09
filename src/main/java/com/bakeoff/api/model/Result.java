@@ -1,51 +1,46 @@
 package com.bakeoff.api.model;
 
-import com.bakeoff.api.model.Result.ResultId;
-import java.io.Serializable;
-import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Entity
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "RESULTS")
-@IdClass(ResultId.class)
+@Table(name = "RESULT")
 public class Result {
 
   @Id
-  @Column(name = "FK_BAKER_NAME")
-  private String bakerName;
-
-  @Id
-  @Column(name = "FK_JUDGE_NAME")
-  private String judgeName;
-
-  @Id
-  @Column(name = "FK_DATE")
-  private LocalDate date;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "ID", nullable = false)
+  private Integer id;
   
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "FK_JUDGE_ID")
+  private Judge fkJudge;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "FK_PARTICIPANT_ID")
+  private Participant fkParticipant;
+
   @Column(name = "APPEARANCE")
   private Integer appearance;
-  
+
   @Column(name = "TASTE")
   private Integer taste;
-  
-  @Data
-  public static class ResultId implements Serializable {
-    
-    private String bakerName;
-    private String judgeName;
-    private LocalDate date;
-  }
+
 }

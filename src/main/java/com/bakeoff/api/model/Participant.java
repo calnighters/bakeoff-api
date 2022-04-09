@@ -1,12 +1,14 @@
 package com.bakeoff.api.model;
 
-import java.time.LocalDate;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -21,20 +23,29 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "BAKEOFF")
-public class Bakeoff {
+@Table(name = "PARTICIPANT")
+public class Participant {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "ID", nullable = false)
   private Integer id;
 
-  @Column(name = "BO_DATE")
-  private LocalDate boDate;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "FK_BAKER_ID")
+  private Baker fkBaker;
 
-  @Column(name = "FOOD", length = 28)
-  private String food;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "FK_BAKEOFF_ID")
+  private Bakeoff fkBakeoff;
 
-  @OneToMany(mappedBy = "fkBakeoff")
-  private List<Participant> participants;
+  @Column(name = "ENTRANT_ID")
+  private Integer entrantId;
+
+  @Column(name = "DESCRIPTION", length = 256)
+  private String description;
+
+  @OneToMany(mappedBy = "fkParticipant")
+  private List<Result> results;
+
 }

@@ -1,11 +1,11 @@
 package com.bakeoff.api.controller;
 
-import com.bakeoff.api.dto.ResultDto;
 import com.bakeoff.api.service.ApiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -15,9 +15,14 @@ public class ApiController {
 
   private final ApiService apiService;
 
-  @PostMapping(path = "result")
-  public void enterNewResult(@RequestBody ResultDto resultDto) {
-    apiService.enterNewResult(resultDto);
+  @PostMapping
+  public void addBakeoff(@RequestParam String name) {
+    apiService.addBakeoff(name);
+  }
+  
+  @PutMapping
+  public void updateBakeOff(@RequestParam String name) {
+    apiService.updateBakeOff(name);
   }
   
 }
