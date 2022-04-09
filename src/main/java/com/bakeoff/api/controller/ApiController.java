@@ -39,7 +39,7 @@ public class ApiController {
     return apiService.getLatestBakeoff();
   }
   
-  @DeleteMapping
+  @DeleteMapping("/participant")
   public void deleteParticipant(@PathVariable Integer entrantId) {
     apiService.deleteParticipant(entrantId);
   }
