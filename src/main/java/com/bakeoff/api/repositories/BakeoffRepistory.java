@@ -8,4 +8,5 @@ import org.springframework.data.repository.CrudRepository;
 public interface BakeoffRepistory extends CrudRepository<Bakeoff, Integer> {
 
   Optional<Bakeoff> findByBoDate(LocalDate boDate);
+  
 }
