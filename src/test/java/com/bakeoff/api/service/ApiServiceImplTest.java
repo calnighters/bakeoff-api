@@ -1,8 +1,11 @@
 package com.bakeoff.api.service;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.bakeoff.api.dto.BakeoffDto;
 import com.bakeoff.api.dto.BakeoffResponseDto;
+import com.bakeoff.api.dto.ParticipantDto;
 import com.bakeoff.api.model.Bakeoff;
 import com.bakeoff.api.model.Baker;
 import com.bakeoff.api.model.Judge;
@@ -106,8 +109,25 @@ class ApiServiceImplTest {
       }};
       
       BakeoffResponseDto actual = apiService.getLatestBakeoff();
-
       assertEquals(1, actual.getBakeoffs().size());
+      
+      BakeoffDto response = actual.getBakeoffs().get(0);
+      assertAll(
+          () -> assertEquals(LocalDate.of(2021, 1, 1), response.getDate()),
+          () -> assertEquals("Cheesecake", response.getTitle()),
+          () -> assertEquals(2, response.getParticipants().size())
+      );
+      
+      ParticipantDto p1 = response.getParticipants().get(0);
+      ParticipantDto p2 = response.getParticipants().get(1);
+      assertAll(
+          () -> assertEquals(1, p1.getEntrantId()),
+          () -> assertEquals("Callum", p1.getName()),
+          () -> assertEquals(2, p1.getResults().size()),
+          () -> assertEquals(2, p2.getEntrantId()),
+          () -> assertEquals("Harry", p2.getName()),
+          () -> assertEquals(2, p2.getResults().size())
+      );
     }
   }
 }
