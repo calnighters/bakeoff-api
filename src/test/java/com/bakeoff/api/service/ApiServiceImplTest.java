@@ -3,6 +3,7 @@ package com.bakeoff.api.service;
 import com.bakeoff.api.dto.BakeoffDto;
 import com.bakeoff.api.dto.BakeoffResponseDto;
 import com.bakeoff.api.dto.ParticipantDto;
+import com.bakeoff.api.exceptions.NotFoundException;
 import com.bakeoff.api.model.Bakeoff;
 import com.bakeoff.api.model.Baker;
 import com.bakeoff.api.model.Judge;
@@ -67,6 +68,7 @@ class ApiServiceImplTest {
   @DisplayName("getLatestBakeOff method")
   class GetLatestBakeOffMethod {
 
+//    getLatestBakeoff Tests
     @Test
     @DisplayName("When there is one bakeoff, ensure this is returned")
     void oneBakeoffReturned(
@@ -239,6 +241,7 @@ class ApiServiceImplTest {
     assertEquals(0, actual.getBakeoffs().size());
   }
 
+//  getAllBakeoffs Tests
   @Test
   @DisplayName("Get all bake offs")
   void getAllBakeoffReturned(
@@ -290,6 +293,7 @@ class ApiServiceImplTest {
     assertEquals(2, actual.getBakeoffs().size());
   }
 
+//  addBakeoff Tests
   @Test
   @DisplayName("Add bakeoff")
   void addBakeoff(
@@ -301,8 +305,68 @@ class ApiServiceImplTest {
           @Injectable Clock clock,
           @Tested ApiServiceImpl apiService
   ) {
-    
-    
-    
+
+    new Expectations() {{
+      bakeoffRepistory.save(withInstanceOf(Bakeoff.class));
+    }};
+
+    apiService.addBakeoff("Add New Bake Off Name");
+
   }
+
+//  updateBakeOff Tests
+  @Test
+  @DisplayName("Update bakeoff")
+  void updateBakeoff(
+          @Injectable ResultRepository resultRepository,
+          @Injectable BakeoffRepistory bakeoffRepistory,
+          @Injectable JudgeRepository judgeRepository,
+          @Injectable BakerRepository bakerRepository,
+          @Injectable ParticipantRepository participantRepository,
+          @Injectable Clock clock,
+          @Tested ApiServiceImpl apiService
+  ) {
+
+    Bakeoff bakeoff = Bakeoff.builder()
+            .boDate(LocalDate.of(2022, 1, 1))
+            .food("Cheesecake")
+            .build();
+    System.out.println(LocalDate.now(clock));
+
+    new Expectations() {{
+      bakeoffRepistory.findByBoDate(LocalDate.now(clock));
+      bakeoffRepistory.save(withInstanceOf(Bakeoff.class));
+    }};
+
+    apiService.updateBakeOff("Updated Bake Off Name");
+
+  }
+
+  @Test
+  @DisplayName("Update bakeoff - no bake off found")
+  void noBakeoffFound(
+          @Injectable ResultRepository resultRepository,
+          @Injectable BakeoffRepistory bakeoffRepistory,
+          @Injectable JudgeRepository judgeRepository,
+          @Injectable BakerRepository bakerRepository,
+          @Injectable ParticipantRepository participantRepository,
+          @Injectable Clock clock,
+          @Tested ApiServiceImpl apiService
+  ) {
+
+    Bakeoff bakeoff = Bakeoff.builder()
+            .build();
+
+    new Expectations() {{
+      bakeoffRepistory.findByBoDate(LocalDate.now(clock))
+              .orElseThrow(
+                      () -> new NotFoundException("Bakeoff not found for date: " + LocalDate.now(clock)));
+    }};
+
+    apiService.updateBakeOff("Updated Bake Off Name");
+
+  }
+  
+//  deleteParticipant Tests
+  
 }
