@@ -1,5 +1,8 @@
 package com.bakeoff.api.service;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.bakeoff.api.dto.BakeoffDto;
 import com.bakeoff.api.dto.BakeoffResponseDto;
 import com.bakeoff.api.dto.ParticipantDto;
@@ -24,8 +27,6 @@ import mockit.Tested;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class ApiServiceImplTest {
 
