@@ -18,12 +18,13 @@ import com.bakeoff.api.repositories.JudgeRepository;
 import com.bakeoff.api.repositories.ParticipantRepository;
 import com.bakeoff.api.repositories.ResultRepository;
 import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
 import mockit.Expectations;
 import mockit.Injectable;
-import mockit.Tested;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -55,7 +56,8 @@ class ApiServiceImplTest {
             .build();
   }
 
-  private Result createResult(Integer id, Participant participant, Judge judge, Integer taste, Integer appearance) {
+  private Result createResult(Integer id, Participant participant, Judge judge, Integer taste,
+      Integer appearance) {
     return Result.builder()
             .id(id)
             .fkParticipant(participant)
@@ -73,15 +75,16 @@ class ApiServiceImplTest {
     @Test
     @DisplayName("When there is one bakeoff, ensure this is returned")
     void oneBakeoffReturned(
-            @Injectable ResultRepository resultRepository,
-            @Injectable BakeoffRepistory bakeoffRepistory,
-            @Injectable JudgeRepository judgeRepository,
-            @Injectable BakerRepository bakerRepository,
-            @Injectable ParticipantRepository participantRepository,
-            @Injectable Clock clock,
-            @Tested ApiServiceImpl apiService
+        @Injectable ResultRepository resultRepository,
+        @Injectable BakeoffRepistory bakeoffRepistory,
+        @Injectable JudgeRepository judgeRepository,
+        @Injectable BakerRepository bakerRepository,
+        @Injectable ParticipantRepository participantRepository
     ) {
-
+      Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
+      ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
+          bakeoffRepistory, participantRepository, clock);
+      
       Judge judge1 = createJudge(1, "Zach");
       Judge judge2 = createJudge(2, "Bella");
 
