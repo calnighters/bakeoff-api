@@ -6,6 +6,7 @@ spring:
     url: jdbc:${JAWSDB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+    max-active: 5
   jpa:
     hibernate:
       naming:
