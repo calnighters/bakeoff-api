@@ -3,9 +3,9 @@ spring:
     banner-mode: off
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:30306/bakeoff?serverTimezone=UTC
-    username: ${db.username:root}
-    password: ${db.password:password}
+    url: jdbc:${JAWSDB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
     hibernate:
       naming:

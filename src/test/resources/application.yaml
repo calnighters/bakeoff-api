@@ -1,0 +1,12 @@
+spring:
+  main:
+    banner-mode: off
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:30306/bakeoff?serverTimezone=UTC
+    username: ${db.username:root}
+    password: ${db.password:password}
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
