@@ -4,6 +4,7 @@ import com.bakeoff.api.dto.BakeoffResponseDto;
 import com.bakeoff.api.dto.BakerResponseDto;
 import com.bakeoff.api.dto.JudgeResponseDto;
 import com.bakeoff.api.dto.ParticipantDto;
+import com.bakeoff.api.dto.ResultDto;
 
 public interface ApiService {
 
@@ -26,4 +27,6 @@ public interface ApiService {
   JudgeResponseDto getJudges();
 
   void addParticipant(ParticipantDto participantDto);
+
+  void addResult(ResultDto resultDto);
 }

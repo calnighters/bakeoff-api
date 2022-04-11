@@ -189,6 +189,52 @@ public class BakeoffApiIT {
 
   }
 
+  @Nested
+  @DisplayName("POST - add result")
+  class AddResult {
+
+    @Test
+    @DisplayName("When a POST request is sent to add a result, the result is added.")
+    @DataSet(value = "/data/api/input/addResult/valid.xml", cleanBefore = true)
+    @ExpectedDataSet(value = {"/data/api/output/addResult/validResponse.xml"}, ignoreCols = "ID")
+    void resultAdded() throws JSONException {
+      ResponseEntity<String> result = callService(ROOT_URL + "result", HttpMethod.POST,
+          new HttpEntity<>(TestUtils.getResource("/data/api/input/addResult/valid.json"), headers));
+      assertEquals(HttpStatus.OK, result.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("When a POST request is sent to add result, but there is no bakeoff, ensure error thrown")
+    @DataSet(cleanBefore = true)
+    void noBakeoff() throws JSONException {
+      ResponseEntity<String> result = callService(ROOT_URL + "result", HttpMethod.POST,
+          new HttpEntity<>(TestUtils.getResource("/data/api/input/addResult/valid.json"), headers));
+      assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
+      assertTrue(result.getBody().contains("Bakeoff not found for date: 2021-01-01"));
+    }
+
+    @Test
+    @DisplayName("When a POST request is sent to add result, but there is no bakeoff, ensure error thrown")
+    @DataSet(value = "/data/api/input/addResult/noParticipant.xml", cleanBefore = true)
+    void noParticipant() throws JSONException {
+      ResponseEntity<String> result = callService(ROOT_URL + "result", HttpMethod.POST,
+          new HttpEntity<>(TestUtils.getResource("/data/api/input/addResult/valid.json"), headers));
+      assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
+      assertTrue(result.getBody().contains("Participant not found for Entrant ID: 1 and date: 2021-01-01"));
+    }
+
+    @Test
+    @DisplayName("When a POST request is sent to add result, but there is no bakeoff, ensure error thrown")
+    @DataSet(value = "/data/api/input/addResult/noJudge.xml", cleanBefore = true)
+    void noJudge() throws JSONException {
+      ResponseEntity<String> result = callService(ROOT_URL + "result", HttpMethod.POST,
+          new HttpEntity<>(TestUtils.getResource("/data/api/input/addResult/valid.json"), headers));
+      assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
+      assertTrue(result.getBody().contains("Judge not found for name: Callum and date: 2021-01-01"));
+    }
+
+  }
+
   @TestConfiguration
   public static class TestConfig {
 

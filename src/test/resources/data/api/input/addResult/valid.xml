@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dataset>
+
+  <BAKER
+    ID="1"
+    BAKER_NAME="Harry"
+  />
+
+  <BAKEOFF
+    ID="1"
+    FOOD="Cheesecake"
+    BO_DATE="2021-01-01"
+  />
+
+  <JUDGE
+    ID="1"
+    JUDGE_NAME="Callum"
+    FK_BAKEOFF_ID="1"
+  />
+
+  <PARTICIPANT
+    ID="1"
+    ENTRANT_ID="1"
+    FK_BAKER_ID="1"
+    FK_BAKEOFF_ID="1"
+    DESCRIPTION="Lemon"
+  />
+  
+</dataset>

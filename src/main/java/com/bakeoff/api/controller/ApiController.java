@@ -4,6 +4,7 @@ import com.bakeoff.api.dto.BakeoffResponseDto;
 import com.bakeoff.api.dto.BakerResponseDto;
 import com.bakeoff.api.dto.JudgeResponseDto;
 import com.bakeoff.api.dto.ParticipantDto;
+import com.bakeoff.api.dto.ResultDto;
 import com.bakeoff.api.service.ApiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -73,5 +74,10 @@ public class ApiController {
   @GetMapping(path = "/judge")
   public JudgeResponseDto getJudges() {
     return apiService.getJudges();
+  }
+  
+  @PostMapping(path = "/result")
+  public void addResult(@RequestBody ResultDto resultDto) {
+    apiService.addResult(resultDto);
   }
 }
