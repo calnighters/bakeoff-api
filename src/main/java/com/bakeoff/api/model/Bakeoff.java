@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -21,7 +22,9 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "BAKEOFF")
+@Table(name = "BAKEOFF", indexes = {
+    @Index(name = "BO_DATE", columnList = "BO_DATE", unique = true)
+})
 public class Bakeoff {
 
   @Id
@@ -37,4 +40,7 @@ public class Bakeoff {
 
   @OneToMany(mappedBy = "fkBakeoff")
   private List<Participant> participants;
+
+  @OneToMany(mappedBy = "fkBakeoff")
+  private List<Judge> judges;
 }

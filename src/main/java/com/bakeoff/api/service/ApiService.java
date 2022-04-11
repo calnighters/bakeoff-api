@@ -1,6 +1,8 @@
 package com.bakeoff.api.service;
 
 import com.bakeoff.api.dto.BakeoffResponseDto;
+import com.bakeoff.api.dto.BakerResponseDto;
+import com.bakeoff.api.dto.JudgeResponseDto;
 
 public interface ApiService {
 
@@ -13,4 +15,12 @@ public interface ApiService {
   BakeoffResponseDto getLatestBakeoff();
 
   void deleteParticipant(Integer entrantId);
+  
+  void addBaker(String bakerName);
+
+  BakerResponseDto getBakers();
+
+  void addJudge(String name);
+  
+  JudgeResponseDto getJudges();
 }

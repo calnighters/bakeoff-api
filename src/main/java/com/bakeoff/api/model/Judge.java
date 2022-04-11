@@ -3,9 +3,12 @@ package com.bakeoff.api.model;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -27,6 +30,10 @@ public class Judge {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "ID", nullable = false)
   private Integer id;
+  
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "FK_BAKEOFF_ID")
+  private Bakeoff fkBakeoff;
 
   @Column(name = "JUDGE_NAME", length = 28)
   private String judgeName;

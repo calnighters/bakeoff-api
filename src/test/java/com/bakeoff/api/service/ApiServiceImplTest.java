@@ -2,10 +2,14 @@ package com.bakeoff.api.service;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.bakeoff.api.dto.BakeoffDto;
 import com.bakeoff.api.dto.BakeoffResponseDto;
+import com.bakeoff.api.dto.BakerResponseDto;
+import com.bakeoff.api.dto.JudgeResponseDto;
 import com.bakeoff.api.dto.ParticipantDto;
+import com.bakeoff.api.exceptions.NotFoundException;
 import com.bakeoff.api.model.Bakeoff;
 import com.bakeoff.api.model.Baker;
 import com.bakeoff.api.model.Judge;
@@ -20,9 +24,12 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import mockit.Expectations;
 import mockit.Injectable;
+import mockit.Verifications;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -81,7 +88,7 @@ class ApiServiceImplTest {
       Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
       ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
           bakeoffRepistory, participantRepository, clock);
-      
+
       Judge judge1 = createJudge(1, "Zach");
       Judge judge2 = createJudge(2, "Bella");
 
@@ -132,5 +139,224 @@ class ApiServiceImplTest {
           () -> assertEquals(2, p2.getResults().size())
       );
     }
+  }
+
+  @Nested
+  @DisplayName("addBaker method")
+  class AddBakerMethod {
+
+    @Test
+    @DisplayName("When the method is called then the baker is added")
+    void bakerAdded(
+        @Injectable ResultRepository resultRepository,
+        @Injectable BakeoffRepistory bakeoffRepistory,
+        @Injectable JudgeRepository judgeRepository,
+        @Injectable BakerRepository bakerRepository,
+        @Injectable ParticipantRepository participantRepository
+    ) {
+      Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
+      ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
+          bakeoffRepistory, participantRepository, clock);
+
+      new Expectations() {{
+        bakerRepository.save(withInstanceOf(Baker.class));
+      }};
+
+      apiService.addBaker("callum");
+
+      new Verifications() {{
+        Baker baker;
+        bakerRepository.save(baker = withCapture());
+        assertEquals("callum", baker.getBakerName());
+      }};
+    }
+
+  }
+
+  @Nested
+  @DisplayName("addJudge method")
+  class AddJudgeMethod {
+
+    @Test
+    @DisplayName("When the method is called then the judge is added")
+    void judgeAdded(
+        @Injectable ResultRepository resultRepository,
+        @Injectable BakeoffRepistory bakeoffRepistory,
+        @Injectable JudgeRepository judgeRepository,
+        @Injectable BakerRepository bakerRepository,
+        @Injectable ParticipantRepository participantRepository
+    ) {
+      Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
+      ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
+          bakeoffRepistory, participantRepository, clock);
+
+      Bakeoff bakeoff = Bakeoff.builder()
+          .id(1)
+          .food("Cheesecake")
+          .boDate(LocalDate.of(2021, 1, 1))
+          .build();
+
+      new Expectations() {{
+        bakeoffRepistory.findByBoDate(withInstanceOf(LocalDate.class));
+        result = Optional.of(bakeoff);
+        judgeRepository.save(withInstanceOf(Judge.class));
+      }};
+
+      apiService.addJudge("callum");
+
+      new Verifications() {{
+        Judge judge;
+        judgeRepository.save(judge = withCapture());
+        assertEquals("callum", judge.getJudgeName());
+        assertEquals(bakeoff, judge.getFkBakeoff());
+      }};
+    }
+
+    @Test
+    @DisplayName("When the method is called but there is no current bakeoff, exception is thrown")
+    void bakeoffNotFound(
+        @Injectable ResultRepository resultRepository,
+        @Injectable BakeoffRepistory bakeoffRepistory,
+        @Injectable JudgeRepository judgeRepository,
+        @Injectable BakerRepository bakerRepository,
+        @Injectable ParticipantRepository participantRepository
+    ) {
+      Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
+      ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
+          bakeoffRepistory, participantRepository, clock);
+
+      new Expectations() {{
+        bakeoffRepistory.findByBoDate(withInstanceOf(LocalDate.class));
+        result = Optional.empty();
+      }};
+
+      NotFoundException e = assertThrows(NotFoundException.class,
+          () -> apiService.addJudge("callum"));
+
+      assertEquals("Bakeoff not found for date: 2021-01-01", e.getMessage());
+    }
+
+  }
+
+  @Nested
+  @DisplayName("getBakers method")
+  class GetBakersMethod {
+
+    @Test
+    @DisplayName("When the method is called then all bakers are returned")
+    void bakersReturned(
+        @Injectable ResultRepository resultRepository,
+        @Injectable BakeoffRepistory bakeoffRepistory,
+        @Injectable JudgeRepository judgeRepository,
+        @Injectable BakerRepository bakerRepository,
+        @Injectable ParticipantRepository participantRepository
+    ) {
+      Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
+      ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
+          bakeoffRepistory, participantRepository, clock);
+
+      Baker baker1 = createBaker(1, "Callum");
+      Baker baker2 = createBaker(2, "Zach");
+      Baker baker3 = createBaker(3, "Harry");
+
+      new Expectations() {{
+        bakerRepository.findAll();
+        result = List.of(baker1, baker2, baker3);
+      }};
+
+      BakerResponseDto response = apiService.getBakers();
+
+      assertEquals(3, response.getBakers().size());
+      assertEquals("Callum", response.getBakers().get(0).getName());
+      assertEquals("Zach", response.getBakers().get(1).getName());
+      assertEquals("Harry", response.getBakers().get(2).getName());
+
+    }
+
+    @Test
+    @DisplayName("When the method is called and there are no bakers, then an ampty list is returned")
+    void noBakers(
+        @Injectable ResultRepository resultRepository,
+        @Injectable BakeoffRepistory bakeoffRepistory,
+        @Injectable JudgeRepository judgeRepository,
+        @Injectable BakerRepository bakerRepository,
+        @Injectable ParticipantRepository participantRepository
+    ) {
+      Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
+      ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
+          bakeoffRepistory, participantRepository, clock);
+
+      new Expectations() {{
+        bakerRepository.findAll();
+        result = Collections.emptyList();
+      }};
+
+      BakerResponseDto response = apiService.getBakers();
+
+      assertEquals(0, response.getBakers().size());
+
+    }
+
+  }
+
+  @Nested
+  @DisplayName("getJudges method")
+  class GetJudgesMethod {
+
+    @Test
+    @DisplayName("When the method is called then all judges are returned")
+    void judgesReturned(
+        @Injectable ResultRepository resultRepository,
+        @Injectable BakeoffRepistory bakeoffRepistory,
+        @Injectable JudgeRepository judgeRepository,
+        @Injectable BakerRepository bakerRepository,
+        @Injectable ParticipantRepository participantRepository
+    ) {
+      Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
+      ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
+          bakeoffRepistory, participantRepository, clock);
+      
+      Judge judge1 = createJudge(1, "Callum");
+      Judge judge2 = createJudge(2, "Zach");
+      Judge judge3 = createJudge(3, "Harry");
+
+      new Expectations() {{
+        judgeRepository.findAll();
+        result = List.of(judge1, judge2, judge3);
+      }};
+
+      JudgeResponseDto response = apiService.getJudges();
+
+      assertEquals(3, response.getJudges().size());
+      assertEquals("Callum", response.getJudges().get(0).getName());
+      assertEquals("Zach", response.getJudges().get(1).getName());
+      assertEquals("Harry", response.getJudges().get(2).getName());
+
+    }
+
+    @Test
+    @DisplayName("When the method is called and there are no bakers, then an ampty list is returned")
+    void noJudges(
+        @Injectable ResultRepository resultRepository,
+        @Injectable BakeoffRepistory bakeoffRepistory,
+        @Injectable JudgeRepository judgeRepository,
+        @Injectable BakerRepository bakerRepository,
+        @Injectable ParticipantRepository participantRepository
+    ) {
+      Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
+      ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
+          bakeoffRepistory, participantRepository, clock);
+
+      new Expectations() {{
+        judgeRepository.findAll();
+        result = Collections.emptyList();
+      }};
+
+      JudgeResponseDto response = apiService.getJudges();
+
+      assertEquals(0, response.getJudges().size());
+
+    }
+
   }
 }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dataset>
+
+  <JUDGE
+    ID="1"
+    JUDGE_NAME="Callum"
+  />
+
+  <JUDGE
+    ID="2"
+    JUDGE_NAME="Harry"
+  />
+
+  <JUDGE
+    ID="3"
+    JUDGE_NAME="Zach"
+  />
+</dataset>

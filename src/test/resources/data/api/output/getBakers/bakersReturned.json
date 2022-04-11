@@ -1,0 +1,16 @@
+{
+  "bakers": [
+    {
+      "id": 1,
+      "name": "Callum"
+    },
+    {
+      "id": 2,
+      "name": "Harry"
+    },
+    {
+      "id": 3,
+      "name": "Zach"
+    }
+  ]
+}

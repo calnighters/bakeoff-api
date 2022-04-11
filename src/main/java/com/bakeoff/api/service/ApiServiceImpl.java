@@ -2,11 +2,16 @@ package com.bakeoff.api.service;
 
 import com.bakeoff.api.dto.BakeoffDto;
 import com.bakeoff.api.dto.BakeoffResponseDto;
+import com.bakeoff.api.dto.BakerResponseDto;
+import com.bakeoff.api.dto.JudgeResponseDto;
 import com.bakeoff.api.dto.ParticipantDto;
+import com.bakeoff.api.dto.PersonDto;
 import com.bakeoff.api.dto.ResultDto;
 import com.bakeoff.api.exceptions.InvalidFormatException;
 import com.bakeoff.api.exceptions.NotFoundException;
 import com.bakeoff.api.model.Bakeoff;
+import com.bakeoff.api.model.Baker;
+import com.bakeoff.api.model.Judge;
 import com.bakeoff.api.model.Participant;
 import com.bakeoff.api.model.Result;
 import com.bakeoff.api.repositories.BakeoffRepistory;
@@ -112,6 +117,72 @@ public class ApiServiceImpl implements ApiService {
     } else {
       throw new InvalidFormatException("Entrant ID: " + entrantId + " not part of current bakeoff");
     }
+  }
+
+  @Override
+  public void addBaker(String bakerName) {
+    bakerRepository.save(
+        Baker.builder()
+            .bakerName(bakerName)
+            .build()
+    );
+  }
+
+  @Override
+  public BakerResponseDto getBakers() {
+    List<Baker> bakers = StreamSupport
+        .stream(bakerRepository.findAll().spliterator(), false)
+        .collect(Collectors.toList());
+    return
+        BakerResponseDto.builder()
+            .bakers(
+                bakers.stream()
+                    .map(this::bakerToDto)
+                    .collect(Collectors.toList())
+            )
+            .build();
+  }
+
+  @Override
+  public void addJudge(String name) {
+    Bakeoff bakeoff = bakeoffRepistory.findByBoDate(LocalDate.now(clock))
+        .orElseThrow(
+            () -> new NotFoundException("Bakeoff not found for date: " + LocalDate.now(clock)));
+    judgeRepository.save(
+        Judge.builder()
+            .judgeName(name)
+            .fkBakeoff(bakeoff)
+            .build()
+    );
+  }
+
+  @Override
+  public JudgeResponseDto getJudges() {
+    List<Judge> judges = StreamSupport
+        .stream(judgeRepository.findAll().spliterator(), false)
+        .collect(Collectors.toList());
+    return
+        JudgeResponseDto.builder()
+            .judges(
+                judges.stream()
+                    .map(this::judgeToDto)
+                    .collect(Collectors.toList())
+            )
+            .build();
+  }
+
+  private PersonDto judgeToDto(Judge judge) {
+    return PersonDto.builder()
+        .id(judge.getId())
+        .name(judge.getJudgeName())
+        .build();
+  }
+
+  private PersonDto bakerToDto(Baker baker) {
+    return PersonDto.builder()
+        .id(baker.getId())
+        .name(baker.getBakerName())
+        .build();
   }
 
   private BakeoffDto bakeoffToDto(Bakeoff bakeoff) {

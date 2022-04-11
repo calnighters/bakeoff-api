@@ -1,6 +1,8 @@
 package com.bakeoff.api.controller;
 
 import com.bakeoff.api.dto.BakeoffResponseDto;
+import com.bakeoff.api.dto.BakerResponseDto;
+import com.bakeoff.api.dto.JudgeResponseDto;
 import com.bakeoff.api.service.ApiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,24 +27,44 @@ public class ApiController {
   public void addBakeoff(@RequestParam String name) {
     apiService.addBakeoff(name);
   }
-  
+
   @PutMapping
   public void updateBakeOff(@RequestParam String name) {
     apiService.updateBakeOff(name);
   }
-  
+
   @GetMapping
   public BakeoffResponseDto getAllBakeoffs() {
     return apiService.getAllBakeoffs();
   }
-  
+
   @GetMapping(path = "/latest")
   public BakeoffResponseDto getLatestBakeoff() {
     return apiService.getLatestBakeoff();
   }
-  
+
   @DeleteMapping("/participant")
   public void deleteParticipant(@PathVariable Integer entrantId) {
     apiService.deleteParticipant(entrantId);
+  }
+
+  @PostMapping(path = "/baker")
+  public void addBaker(@RequestParam String name) {
+    apiService.addBaker(name);
+  }
+
+  @GetMapping(path = "/baker")
+  public BakerResponseDto getBakers() {
+    return apiService.getBakers();
+  }
+
+  @PostMapping(path = "/judge")
+  public void addJudge(@RequestParam String name) {
+    apiService.addJudge(name);
+  }
+
+  @GetMapping(path = "/judge")
+  public JudgeResponseDto getJudges() {
+    return apiService.getJudges();
   }
 }
