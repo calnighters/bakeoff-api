@@ -3,6 +3,7 @@ package com.bakeoff.api.service;
 import com.bakeoff.api.dto.BakeoffResponseDto;
 import com.bakeoff.api.dto.BakerResponseDto;
 import com.bakeoff.api.dto.JudgeResponseDto;
+import com.bakeoff.api.dto.ParticipantDto;
 
 public interface ApiService {
 
@@ -23,4 +24,6 @@ public interface ApiService {
   void addJudge(String name);
   
   JudgeResponseDto getJudges();
+
+  void addParticipant(ParticipantDto participantDto);
 }

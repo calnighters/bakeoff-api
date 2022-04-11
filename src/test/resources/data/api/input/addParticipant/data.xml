@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dataset>
+
+  <BAKEOFF
+    ID="1"
+    FOOD="Cheesecake"
+    BO_DATE="2021-01-01"
+  />
+
+  <BAKER
+    ID="1"
+    BAKER_NAME="CALLUM"
+  />
+  
+</dataset>

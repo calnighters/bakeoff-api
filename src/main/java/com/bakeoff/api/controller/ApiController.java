@@ -3,6 +3,7 @@ package com.bakeoff.api.controller;
 import com.bakeoff.api.dto.BakeoffResponseDto;
 import com.bakeoff.api.dto.BakerResponseDto;
 import com.bakeoff.api.dto.JudgeResponseDto;
+import com.bakeoff.api.dto.ParticipantDto;
 import com.bakeoff.api.service.ApiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,6 +45,11 @@ public class ApiController {
     return apiService.getLatestBakeoff();
   }
 
+  @PostMapping("/participant")
+  public void addParticipant(@RequestBody ParticipantDto participantDto) {
+    apiService.addParticipant(participantDto);
+  }
+  
   @DeleteMapping("/participant")
   public void deleteParticipant(@PathVariable Integer entrantId) {
     apiService.deleteParticipant(entrantId);

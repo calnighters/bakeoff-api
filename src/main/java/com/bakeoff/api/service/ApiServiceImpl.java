@@ -171,6 +171,23 @@ public class ApiServiceImpl implements ApiService {
             .build();
   }
 
+  @Override
+  public void addParticipant(ParticipantDto participantDto) {
+    Bakeoff bakeoff = bakeoffRepistory.findByBoDate(LocalDate.now(clock))
+        .orElseThrow(
+            () -> new NotFoundException("Bakeoff not found for date: " + LocalDate.now(clock)));
+    Baker baker = bakerRepository.findById(participantDto.getBakerId()).orElseThrow(
+        () -> new NotFoundException("Baker not found for ID: " + participantDto.getBakerId()));
+    participantRepository.save(
+        Participant.builder()
+            .entrantId(participantDto.getEntrantId())
+            .fkBakeoff(bakeoff)
+            .fkBaker(baker)
+            .description(participantDto.getDescription())
+            .build()
+    );
+  }
+
   private PersonDto judgeToDto(Judge judge) {
     return PersonDto.builder()
         .id(judge.getId())

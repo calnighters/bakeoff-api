@@ -1,6 +1,7 @@
 package com.bakeoff.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.core.api.dataset.ExpectedDataSet;
@@ -85,6 +86,49 @@ public class BakeoffApiIT {
       ResponseEntity<String> result = callService(ROOT_URL + "judge?name=Callum", HttpMethod.POST,
           null);
       assertEquals(HttpStatus.OK, result.getStatusCode());
+    }
+
+  }
+
+  @Nested
+  @DisplayName("POST - add participant")
+  class AddParticipant {
+
+    @Test
+    @DisplayName("When a POST request is sent to add a participant, then the participant is added")
+    @DataSet(value = "/data/api/input/addParticipant/data.xml", cleanBefore = true)
+    @ExpectedDataSet(value = {
+        "/data/api/output/addParticipant/participantAdded.xml"}, ignoreCols = "ID")
+    void judgeAdded() throws JSONException {
+      ResponseEntity<String> result = callService(ROOT_URL + "participant", HttpMethod.POST,
+          new HttpEntity(
+              TestUtils.getResource("/data/api/input/addParticipant/addParticipant.json"),
+              headers));
+      assertEquals(HttpStatus.OK, result.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("When a POST request is sent to add a participant but there is no valid bakeoff, then error is returned")
+    @DataSet(cleanBefore = true)
+    void noBakeoff() throws JSONException {
+      ResponseEntity<String> result = callService(ROOT_URL + "participant", HttpMethod.POST,
+          new HttpEntity(
+              TestUtils.getResource("/data/api/input/addParticipant/addParticipant.json"),
+              headers));
+      assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
+      assertTrue(result.getBody().contains("Bakeoff not found for date: 2021-01-01"));
+    }
+
+    @Test
+    @DisplayName("When a POST request is sent to add a participant but there is no baker, then error is returned")
+    @DataSet(value = "/data/api/input/addParticipant/noBaker.xml", cleanBefore = true)
+    void noBaker() throws JSONException {
+      ResponseEntity<String> result = callService(ROOT_URL + "participant", HttpMethod.POST,
+          new HttpEntity(
+              TestUtils.getResource("/data/api/input/addParticipant/addParticipant.json"),
+              headers));
+      assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
+      assertTrue(result.getBody().contains("Baker not found for ID: 1"));
     }
 
   }
