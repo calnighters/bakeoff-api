@@ -134,9 +134,11 @@ class ApiServiceImplTest {
           () -> assertEquals(1, p1.getEntrantId()),
           () -> assertEquals("Callum", p1.getName()),
           () -> assertEquals(2, p1.getResults().size()),
+          () -> assertEquals("Vanilla", p1.getDescription()),
           () -> assertEquals(2, p2.getEntrantId()),
           () -> assertEquals("Harry", p2.getName()),
-          () -> assertEquals(2, p2.getResults().size())
+          () -> assertEquals(2, p2.getResults().size()),
+          () -> assertEquals("Lemon", p2.getDescription())
       );
     }
   }

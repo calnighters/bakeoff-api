@@ -205,6 +205,7 @@ public class ApiServiceImpl implements ApiService {
         .entrantId(participant.getEntrantId())
         .name(participant.getFkBaker().getBakerName())
         .results(scoresFromParticipant(participant))
+        .description(participant.getDescription())
         .build();
   }
 

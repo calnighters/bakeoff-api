@@ -12,7 +12,9 @@ import lombok.Value;
 public class ParticipantDto {
 
   Integer entrantId;
+  Integer bakerId;
   String name;
   List<ResultDto> results;
+  String description;
 
 }
