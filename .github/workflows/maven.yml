@@ -29,6 +29,7 @@ jobs:
       uses: shogo82148/actions-setup-mysql@v1
       with:
         mysql-version: '8.0'
+        root-password: password
 
     - name: Step 4 - Setup DB
       run: |
