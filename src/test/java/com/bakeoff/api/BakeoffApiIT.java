@@ -48,6 +48,7 @@ public class BakeoffApiIT {
   private void setHeaders() {
     headers.clear();
     headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setBasicAuth("BAKEOFF_USER", "test");
   }
 
   private ResponseEntity<String> callService(String url, HttpMethod method, HttpEntity httpEntity) {
@@ -68,7 +69,7 @@ public class BakeoffApiIT {
     @ExpectedDataSet(value = {"/data/api/output/bakerAdded/bakerAdded.xml"}, ignoreCols = "ID")
     void bakerAdded() throws JSONException {
       ResponseEntity<String> result = callService(ROOT_URL + "baker?name=Callum", HttpMethod.POST,
-          null);
+          new HttpEntity(headers));
       assertEquals(HttpStatus.OK, result.getStatusCode());
     }
 
@@ -84,7 +85,7 @@ public class BakeoffApiIT {
     @ExpectedDataSet(value = {"/data/api/output/judgeAdded/judgeAdded.xml"}, ignoreCols = "ID")
     void judgeAdded() throws JSONException {
       ResponseEntity<String> result = callService(ROOT_URL + "judge?name=Callum", HttpMethod.POST,
-          null);
+          new HttpEntity(headers));
       assertEquals(HttpStatus.OK, result.getStatusCode());
     }
 
@@ -141,7 +142,7 @@ public class BakeoffApiIT {
     @DisplayName("When a GET request is sent to get all bakers, the bakers are returned")
     @DataSet(value = {"/data/api/input/getBakers/bakers.xml"}, cleanBefore = true)
     void bakersReturned() throws JSONException {
-      ResponseEntity<String> result = callService(ROOT_URL + "baker", HttpMethod.GET, null);
+      ResponseEntity<String> result = callService(ROOT_URL + "baker", HttpMethod.GET, new HttpEntity(headers));
       assertEquals(HttpStatus.OK, result.getStatusCode());
       JSONAssert.assertEquals(
           TestUtils.getResource("/data/api/output/getBakers/bakersReturned.json"), result.getBody(),
@@ -152,7 +153,7 @@ public class BakeoffApiIT {
     @DataSet(cleanBefore = true)
     @DisplayName("When a GET request is sent to get all bakers, but there are none, then an empty list is returned")
     void noBakersReturned() throws JSONException {
-      ResponseEntity<String> result = callService(ROOT_URL + "baker", HttpMethod.GET, null);
+      ResponseEntity<String> result = callService(ROOT_URL + "baker", HttpMethod.GET, new HttpEntity(headers));
       assertEquals(HttpStatus.OK, result.getStatusCode());
       JSONAssert.assertEquals(
           TestUtils.getResource("/data/api/output/getBakers/noBakers.json"), result.getBody(),
@@ -169,7 +170,7 @@ public class BakeoffApiIT {
     @DisplayName("When a GET request is sent to get all bakers, the bakers are returned")
     @DataSet(value = {"/data/api/input/getJudges/judges.xml"}, cleanBefore = true)
     void judgesReturned() throws JSONException {
-      ResponseEntity<String> result = callService(ROOT_URL + "judge", HttpMethod.GET, null);
+      ResponseEntity<String> result = callService(ROOT_URL + "judge", HttpMethod.GET, new HttpEntity(headers));
       assertEquals(HttpStatus.OK, result.getStatusCode());
       JSONAssert.assertEquals(
           TestUtils.getResource("/data/api/output/getJudges/judgesReturned.json"), result.getBody(),
@@ -180,7 +181,7 @@ public class BakeoffApiIT {
     @DataSet(cleanBefore = true)
     @DisplayName("When a GET request is sent to get all judges, but there are none, then an empty list is returned")
     void noJudgesReturned() throws JSONException {
-      ResponseEntity<String> result = callService(ROOT_URL + "judge", HttpMethod.GET, null);
+      ResponseEntity<String> result = callService(ROOT_URL + "judge", HttpMethod.GET, new HttpEntity(headers));
       assertEquals(HttpStatus.OK, result.getStatusCode());
       JSONAssert.assertEquals(
           TestUtils.getResource("/data/api/output/getJudges/noJudges.json"), result.getBody(),

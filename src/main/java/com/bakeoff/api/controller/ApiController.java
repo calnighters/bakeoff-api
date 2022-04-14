@@ -26,12 +26,12 @@ public class ApiController {
 
   private final ApiService apiService;
 
-  @PostMapping
+  @PostMapping(path = "/event")
   public void addBakeoff(@RequestParam String name) {
     apiService.addBakeoff(name);
   }
 
-  @PutMapping
+  @PutMapping(path = "/event")
   public void updateBakeOff(@RequestParam String name) {
     apiService.updateBakeOff(name);
   }
