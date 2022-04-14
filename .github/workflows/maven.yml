@@ -1,7 +1,4 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
-
-name: Java CI with Maven
+name: Bakeoff API Build Plan
 
 on:
   push:
@@ -39,11 +36,3 @@ jobs:
 
     - name: Step 5 - Build with Maven
       run: mvn clean install
-      
-    - name: Step 6 - List the current directory
-      run: ls -a
-      
-    - name: Step 7 - List the target directory
-      run: |
-        cd target
-        ls -a
