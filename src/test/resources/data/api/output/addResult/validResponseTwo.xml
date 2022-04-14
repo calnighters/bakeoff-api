@@ -29,5 +29,31 @@
     FK_BAKEOFF_ID="1"
     DESCRIPTION="Lemon"
   />
-  
+
+  <RESULT
+    ID="1"
+    FK_PARTICIPANT_ID="1"
+    FK_JUDGE_ID="1"
+    APPEARANCE="3"
+    TASTE="2"
+  />
+
+  <JUDGE_HISTORY
+    FK_JUDGE_ID="1"
+    FK_BAKEOFF_ID="1"
+  />
+
+  <RESULT
+    ID="2"
+    FK_PARTICIPANT_ID="1"
+    FK_JUDGE_ID="2"
+    APPEARANCE="1"
+    TASTE="4"
+  />
+
+  <JUDGE_HISTORY
+    FK_JUDGE_ID="2"
+    FK_BAKEOFF_ID="1"
+  />
+
 </dataset>

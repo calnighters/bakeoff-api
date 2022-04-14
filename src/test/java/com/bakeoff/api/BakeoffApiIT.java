@@ -204,6 +204,32 @@ public class BakeoffApiIT {
     }
 
     @Test
+    @DisplayName("When a POST request is sent to add a result, the result is added.")
+    @DataSet(value = "/data/api/input/addResult/valid.xml", cleanBefore = true)
+    @ExpectedDataSet(value = {"/data/api/output/addResult/validResponseTwo.xml"}, ignoreCols = "ID")
+    void twoResultsAdded() throws JSONException {
+      ResponseEntity<String> result = callService(ROOT_URL + "result", HttpMethod.POST,
+          new HttpEntity<>(TestUtils.getResource("/data/api/input/addResult/valid.json"), headers));
+      assertEquals(HttpStatus.OK, result.getStatusCode());
+      result = callService(ROOT_URL + "result", HttpMethod.POST,
+          new HttpEntity<>(TestUtils.getResource("/data/api/input/addResult/valid2.json"), headers));
+      assertEquals(HttpStatus.OK, result.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("When a POST request is sent to add a result, the result is added.")
+    @DataSet(value = "/data/api/input/addResult/validTwoBakers.xml", cleanBefore = true)
+    @ExpectedDataSet(value = {"/data/api/output/addResult/validResponseTwoBakers.xml"}, ignoreCols = "ID")
+    void twoBakers() throws JSONException {
+      ResponseEntity<String> result = callService(ROOT_URL + "result", HttpMethod.POST,
+          new HttpEntity<>(TestUtils.getResource("/data/api/input/addResult/valid.json"), headers));
+      assertEquals(HttpStatus.OK, result.getStatusCode());
+      result = callService(ROOT_URL + "result", HttpMethod.POST,
+          new HttpEntity<>(TestUtils.getResource("/data/api/input/addResult/valid3.json"), headers));
+      assertEquals(HttpStatus.OK, result.getStatusCode());
+    }
+
+    @Test
     @DisplayName("When a POST request is sent to add result, but there is no bakeoff, ensure error thrown")
     @DataSet(cleanBefore = true)
     void noBakeoff() throws JSONException {
@@ -230,7 +256,7 @@ public class BakeoffApiIT {
       ResponseEntity<String> result = callService(ROOT_URL + "result", HttpMethod.POST,
           new HttpEntity<>(TestUtils.getResource("/data/api/input/addResult/valid.json"), headers));
       assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
-      assertTrue(result.getBody().contains("Judge not found for name: Callum and date: 2021-01-01"));
+      assertTrue(result.getBody().contains("Judge not found for name: Callum"));
     }
 
   }

@@ -14,10 +14,12 @@ import com.bakeoff.api.exceptions.NotFoundException;
 import com.bakeoff.api.model.Bakeoff;
 import com.bakeoff.api.model.Baker;
 import com.bakeoff.api.model.Judge;
+import com.bakeoff.api.model.JudgeHistory;
 import com.bakeoff.api.model.Participant;
 import com.bakeoff.api.model.Result;
 import com.bakeoff.api.repositories.BakeoffRepistory;
 import com.bakeoff.api.repositories.BakerRepository;
+import com.bakeoff.api.repositories.JudgeHistoryRepository;
 import com.bakeoff.api.repositories.JudgeRepository;
 import com.bakeoff.api.repositories.ParticipantRepository;
 import com.bakeoff.api.repositories.ResultRepository;
@@ -84,11 +86,12 @@ class ApiServiceImplTest {
         @Injectable BakeoffRepistory bakeoffRepistory,
         @Injectable JudgeRepository judgeRepository,
         @Injectable BakerRepository bakerRepository,
-        @Injectable ParticipantRepository participantRepository
+        @Injectable ParticipantRepository participantRepository,
+        @Injectable JudgeHistoryRepository judgeHistoryRepository
     ) {
       Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
       ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
-          bakeoffRepistory, participantRepository, clock);
+          bakeoffRepistory, participantRepository, judgeHistoryRepository, clock);
 
       Judge judge1 = createJudge(1, "Zach");
       Judge judge2 = createJudge(2, "Bella");
@@ -155,11 +158,12 @@ class ApiServiceImplTest {
         @Injectable BakeoffRepistory bakeoffRepistory,
         @Injectable JudgeRepository judgeRepository,
         @Injectable BakerRepository bakerRepository,
-        @Injectable ParticipantRepository participantRepository
+        @Injectable ParticipantRepository participantRepository,
+        @Injectable JudgeHistoryRepository judgeHistoryRepository
     ) {
       Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
       ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
-          bakeoffRepistory, participantRepository, clock);
+          bakeoffRepistory, participantRepository, judgeHistoryRepository, clock);
 
       new Expectations() {{
         bakerRepository.save(withInstanceOf(Baker.class));
@@ -187,11 +191,12 @@ class ApiServiceImplTest {
         @Injectable BakeoffRepistory bakeoffRepistory,
         @Injectable JudgeRepository judgeRepository,
         @Injectable BakerRepository bakerRepository,
-        @Injectable ParticipantRepository participantRepository
+        @Injectable ParticipantRepository participantRepository,
+        @Injectable JudgeHistoryRepository judgeHistoryRepository
     ) {
       Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
       ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
-          bakeoffRepistory, participantRepository, clock);
+          bakeoffRepistory, participantRepository, judgeHistoryRepository, clock);
 
       Bakeoff bakeoff = Bakeoff.builder()
           .id(1)
@@ -211,7 +216,6 @@ class ApiServiceImplTest {
         Judge judge;
         judgeRepository.save(judge = withCapture());
         assertEquals("callum", judge.getJudgeName());
-        assertEquals(bakeoff, judge.getFkBakeoff());
       }};
     }
 
@@ -222,11 +226,12 @@ class ApiServiceImplTest {
         @Injectable BakeoffRepistory bakeoffRepistory,
         @Injectable JudgeRepository judgeRepository,
         @Injectable BakerRepository bakerRepository,
-        @Injectable ParticipantRepository participantRepository
+        @Injectable ParticipantRepository participantRepository,
+        @Injectable JudgeHistoryRepository judgeHistoryRepository
     ) {
       Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
       ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
-          bakeoffRepistory, participantRepository, clock);
+          bakeoffRepistory, participantRepository, judgeHistoryRepository, clock);
 
       new Expectations() {{
         bakeoffRepistory.findByBoDate(withInstanceOf(LocalDate.class));
@@ -252,11 +257,12 @@ class ApiServiceImplTest {
         @Injectable BakeoffRepistory bakeoffRepistory,
         @Injectable JudgeRepository judgeRepository,
         @Injectable BakerRepository bakerRepository,
-        @Injectable ParticipantRepository participantRepository
+        @Injectable ParticipantRepository participantRepository,
+        @Injectable JudgeHistoryRepository judgeHistoryRepository
     ) {
       Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
       ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
-          bakeoffRepistory, participantRepository, clock);
+          bakeoffRepistory, participantRepository, judgeHistoryRepository, clock);
 
       Baker baker1 = createBaker(1, "Callum");
       Baker baker2 = createBaker(2, "Zach");
@@ -283,11 +289,12 @@ class ApiServiceImplTest {
         @Injectable BakeoffRepistory bakeoffRepistory,
         @Injectable JudgeRepository judgeRepository,
         @Injectable BakerRepository bakerRepository,
-        @Injectable ParticipantRepository participantRepository
+        @Injectable ParticipantRepository participantRepository,
+        @Injectable JudgeHistoryRepository judgeHistoryRepository
     ) {
       Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
       ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
-          bakeoffRepistory, participantRepository, clock);
+          bakeoffRepistory, participantRepository, judgeHistoryRepository, clock);
 
       new Expectations() {{
         bakerRepository.findAll();
@@ -313,11 +320,12 @@ class ApiServiceImplTest {
         @Injectable BakeoffRepistory bakeoffRepistory,
         @Injectable JudgeRepository judgeRepository,
         @Injectable BakerRepository bakerRepository,
-        @Injectable ParticipantRepository participantRepository
+        @Injectable ParticipantRepository participantRepository,
+        @Injectable JudgeHistoryRepository judgeHistoryRepository
     ) {
       Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
       ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
-          bakeoffRepistory, participantRepository, clock);
+          bakeoffRepistory, participantRepository, judgeHistoryRepository, clock);
 
       Judge judge1 = createJudge(1, "Callum");
       Judge judge2 = createJudge(2, "Zach");
@@ -344,11 +352,12 @@ class ApiServiceImplTest {
         @Injectable BakeoffRepistory bakeoffRepistory,
         @Injectable JudgeRepository judgeRepository,
         @Injectable BakerRepository bakerRepository,
-        @Injectable ParticipantRepository participantRepository
+        @Injectable ParticipantRepository participantRepository,
+        @Injectable JudgeHistoryRepository judgeHistoryRepository
     ) {
       Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
       ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
-          bakeoffRepistory, participantRepository, clock);
+          bakeoffRepistory, participantRepository, judgeHistoryRepository, clock);
 
       new Expectations() {{
         judgeRepository.findAll();
@@ -374,11 +383,12 @@ class ApiServiceImplTest {
         @Injectable BakeoffRepistory bakeoffRepistory,
         @Injectable JudgeRepository judgeRepository,
         @Injectable BakerRepository bakerRepository,
-        @Injectable ParticipantRepository participantRepository
+        @Injectable ParticipantRepository participantRepository,
+        @Injectable JudgeHistoryRepository judgeHistoryRepository
     ) {
       Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
       ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
-          bakeoffRepistory, participantRepository, clock);
+          bakeoffRepistory, participantRepository, judgeHistoryRepository, clock);
 
       Bakeoff bakeoff = Bakeoff.builder()
           .id(1)
@@ -423,11 +433,12 @@ class ApiServiceImplTest {
         @Injectable BakeoffRepistory bakeoffRepistory,
         @Injectable JudgeRepository judgeRepository,
         @Injectable BakerRepository bakerRepository,
-        @Injectable ParticipantRepository participantRepository
+        @Injectable ParticipantRepository participantRepository,
+        @Injectable JudgeHistoryRepository judgeHistoryRepository
     ) {
       Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
       ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
-          bakeoffRepistory, participantRepository, clock);
+          bakeoffRepistory, participantRepository, judgeHistoryRepository, clock);
 
       new Expectations() {{
         bakeoffRepistory.findByBoDate(withInstanceOf(LocalDate.class));
@@ -454,11 +465,12 @@ class ApiServiceImplTest {
         @Injectable BakeoffRepistory bakeoffRepistory,
         @Injectable JudgeRepository judgeRepository,
         @Injectable BakerRepository bakerRepository,
-        @Injectable ParticipantRepository participantRepository
+        @Injectable ParticipantRepository participantRepository,
+        @Injectable JudgeHistoryRepository judgeHistoryRepository
     ) {
       Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
       ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
-          bakeoffRepistory, participantRepository, clock);
+          bakeoffRepistory, participantRepository, judgeHistoryRepository, clock);
 
       Bakeoff bakeoff = Bakeoff.builder()
           .id(1)
@@ -499,11 +511,12 @@ class ApiServiceImplTest {
         @Injectable BakeoffRepistory bakeoffRepistory,
         @Injectable JudgeRepository judgeRepository,
         @Injectable BakerRepository bakerRepository,
-        @Injectable ParticipantRepository participantRepository
+        @Injectable ParticipantRepository participantRepository,
+        @Injectable JudgeHistoryRepository judgeHistoryRepository
     ) {
       Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
       ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
-          bakeoffRepistory, participantRepository, clock);
+          bakeoffRepistory, participantRepository, judgeHistoryRepository, clock);
 
       new Expectations() {{
         bakeoffRepistory.findByBoDate(withInstanceOf(LocalDate.class));
@@ -531,11 +544,12 @@ class ApiServiceImplTest {
         @Injectable BakeoffRepistory bakeoffRepistory,
         @Injectable JudgeRepository judgeRepository,
         @Injectable BakerRepository bakerRepository,
-        @Injectable ParticipantRepository participantRepository
+        @Injectable ParticipantRepository participantRepository,
+        @Injectable JudgeHistoryRepository judgeHistoryRepository
     ) {
       Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
       ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
-          bakeoffRepistory, participantRepository, clock);
+          bakeoffRepistory, participantRepository, judgeHistoryRepository, clock);
 
       Bakeoff bakeoff = Bakeoff.builder()
           .id(1)
@@ -572,11 +586,12 @@ class ApiServiceImplTest {
         @Injectable BakeoffRepistory bakeoffRepistory,
         @Injectable JudgeRepository judgeRepository,
         @Injectable BakerRepository bakerRepository,
-        @Injectable ParticipantRepository participantRepository
+        @Injectable ParticipantRepository participantRepository,
+        @Injectable JudgeHistoryRepository judgeHistoryRepository
     ) {
       Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
       ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
-          bakeoffRepistory, participantRepository, clock);
+          bakeoffRepistory, participantRepository, judgeHistoryRepository, clock);
 
       Bakeoff bakeoff = Bakeoff.builder()
           .id(1)
@@ -594,8 +609,7 @@ class ApiServiceImplTest {
         participantRepository.findByEntrantIdAndFkBakeoff(withInstanceOf(Integer.class),
             withInstanceOf(Bakeoff.class));
         result = Optional.of(participant);
-        judgeRepository.findByJudgeNameAndFkBakeoff(withInstanceOf(String.class),
-            withInstanceOf(Bakeoff.class));
+        judgeRepository.findByJudgeName(withInstanceOf(String.class));
         result = Optional.empty();
       }};
 
@@ -609,7 +623,7 @@ class ApiServiceImplTest {
       NotFoundException e = assertThrows(NotFoundException.class,
           () -> apiService.addResult(resultDto));
 
-      assertEquals("Judge not found for name: Callum and date: 2021-01-01", e.getMessage());
+      assertEquals("Judge not found for name: Callum", e.getMessage());
 
     }
 
@@ -620,11 +634,12 @@ class ApiServiceImplTest {
         @Injectable BakeoffRepistory bakeoffRepistory,
         @Injectable JudgeRepository judgeRepository,
         @Injectable BakerRepository bakerRepository,
-        @Injectable ParticipantRepository participantRepository
+        @Injectable ParticipantRepository participantRepository,
+        @Injectable JudgeHistoryRepository judgeHistoryRepository
     ) {
       Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
       ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
-          bakeoffRepistory, participantRepository, clock);
+          bakeoffRepistory, participantRepository, judgeHistoryRepository, clock);
 
       Bakeoff bakeoff = Bakeoff.builder()
           .id(1)
@@ -644,9 +659,11 @@ class ApiServiceImplTest {
         participantRepository.findByEntrantIdAndFkBakeoff(withInstanceOf(Integer.class),
             withInstanceOf(Bakeoff.class));
         result = Optional.of(participant);
-        judgeRepository.findByJudgeNameAndFkBakeoff(withInstanceOf(String.class),
-            withInstanceOf(Bakeoff.class));
+        judgeRepository.findByJudgeName(withInstanceOf(String.class));
         result = Optional.of(judge);
+        judgeHistoryRepository.findByFkBakeoffAndFkJudge(withInstanceOf(Bakeoff.class),
+            withInstanceOf(Judge.class));
+        result = Optional.empty();
       }};
 
       ResultDto resultDto = ResultDto.builder()
@@ -659,9 +676,15 @@ class ApiServiceImplTest {
       apiService.addResult(resultDto);
 
       new Verifications() {{
+        JudgeHistory judgeHistory;
+        judgeHistoryRepository.save(judgeHistory = withCapture());
+
+        assertEquals(judge, judgeHistory.getFkJudge());
+        assertEquals(bakeoff, judgeHistory.getFkBakeoff());
+
         Result result;
         resultRepository.save(result = withCapture());
-        
+
         assertEquals(judge, result.getFkJudge());
         assertEquals(participant, result.getFkParticipant());
         assertEquals(1, result.getTaste());

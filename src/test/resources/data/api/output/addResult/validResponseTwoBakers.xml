@@ -6,6 +6,11 @@
     BAKER_NAME="Harry"
   />
 
+  <BAKER
+    ID="2"
+    BAKER_NAME="Zach"
+  />
+
   <BAKEOFF
     ID="1"
     FOOD="Cheesecake"
@@ -17,11 +22,6 @@
     JUDGE_NAME="Callum"
   />
 
-  <JUDGE
-    ID="2"
-    JUDGE_NAME="Zach"
-  />
-
   <PARTICIPANT
     ID="1"
     ENTRANT_ID="1"
@@ -30,12 +30,28 @@
     DESCRIPTION="Lemon"
   />
 
+  <PARTICIPANT
+    ID="2"
+    ENTRANT_ID="2"
+    FK_BAKER_ID="2"
+    FK_BAKEOFF_ID="1"
+    DESCRIPTION="Vanilla"
+  />
+
   <RESULT
     ID="1"
     FK_PARTICIPANT_ID="1"
     FK_JUDGE_ID="1"
     APPEARANCE="3"
     TASTE="2"
+  />
+
+  <RESULT
+    ID="2"
+    FK_PARTICIPANT_ID="2"
+    FK_JUDGE_ID="1"
+    APPEARANCE="1"
+    TASTE="1"
   />
 
   <JUDGE_HISTORY

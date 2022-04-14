@@ -7,5 +7,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface JudgeRepository extends CrudRepository<Judge, Integer> {
 
-  Optional<Judge> findByJudgeNameAndFkBakeoff(String judgeName, Bakeoff bakeoff);
+  Optional<Judge> findByJudgeName(String judgeName);
 }

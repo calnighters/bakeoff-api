@@ -1,13 +1,14 @@
 package com.bakeoff.api.model;
 
 import java.time.LocalDate;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -22,9 +23,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "BAKEOFF", indexes = {
-    @Index(name = "BO_DATE", columnList = "BO_DATE", unique = true)
-})
+@Table(name = "BAKEOFF")
 public class Bakeoff {
 
   @Id
@@ -42,5 +41,6 @@ public class Bakeoff {
   private List<Participant> participants;
 
   @OneToMany(mappedBy = "fkBakeoff")
-  private List<Judge> judges;
+  private List<JudgeHistory> judgeHistories;
+
 }

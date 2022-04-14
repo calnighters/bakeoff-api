@@ -12,10 +12,12 @@ import com.bakeoff.api.exceptions.NotFoundException;
 import com.bakeoff.api.model.Bakeoff;
 import com.bakeoff.api.model.Baker;
 import com.bakeoff.api.model.Judge;
+import com.bakeoff.api.model.JudgeHistory;
 import com.bakeoff.api.model.Participant;
 import com.bakeoff.api.model.Result;
 import com.bakeoff.api.repositories.BakeoffRepistory;
 import com.bakeoff.api.repositories.BakerRepository;
+import com.bakeoff.api.repositories.JudgeHistoryRepository;
 import com.bakeoff.api.repositories.JudgeRepository;
 import com.bakeoff.api.repositories.ParticipantRepository;
 import com.bakeoff.api.repositories.ResultRepository;
@@ -25,6 +27,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +42,7 @@ public class ApiServiceImpl implements ApiService {
   private final JudgeRepository judgeRepository;
   private final BakeoffRepistory bakeoffRepistory;
   private final ParticipantRepository participantRepository;
+  private final JudgeHistoryRepository judgeHistoryRepository;
   private final Clock clock;
 
   @Override
@@ -151,7 +155,6 @@ public class ApiServiceImpl implements ApiService {
     judgeRepository.save(
         Judge.builder()
             .judgeName(name)
-            .fkBakeoff(bakeoff)
             .build()
     );
   }
@@ -197,10 +200,19 @@ public class ApiServiceImpl implements ApiService {
         resultDto.getEntrantId(), bakeoff).orElseThrow(() -> new NotFoundException(
         "Participant not found for Entrant ID: " + resultDto.getEntrantId() + " and date: "
             + LocalDate.now(clock)));
-    Judge judge = judgeRepository.findByJudgeNameAndFkBakeoff(resultDto.getJudgeName(), bakeoff)
+    Judge judge = judgeRepository.findByJudgeName(resultDto.getJudgeName())
         .orElseThrow(() -> new NotFoundException(
-            "Judge not found for name: " + resultDto.getJudgeName() + " and date: " + LocalDate.now(
-                clock)));
+            "Judge not found for name: " + resultDto.getJudgeName()));
+    Optional<JudgeHistory> judgeHistory = judgeHistoryRepository.findByFkBakeoffAndFkJudge(bakeoff,
+        judge);
+    if (judgeHistory.isEmpty()) {
+      judgeHistoryRepository.save(
+          JudgeHistory.builder()
+              .fkBakeoff(bakeoff)
+              .fkJudge(judge)
+              .build()
+      );
+    }
     resultRepository.save(
         Result.builder()
             .fkJudge(judge)
