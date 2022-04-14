@@ -25,11 +25,16 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
-    - name: Step 3 - Setup DB
+    - name: Step 3 - Start DB
       uses: shogo82148/actions-setup-mysql@v1
       with:
         mysql-version: '8.0'
-    - run: mysql -uroot -h127.0.0.1 -e 'SELECT version()'
+
+    - name: Step 4 - Setup DB
+      run: |
+        mysql -uroot -h127.0.0.1 -ppassword -e 'CREATE DATABASE bakeoff'
+        mysql -uroot -h127.0.0.1 -ppassword bakeoff < schema.sql
+        mysql -uroot -h127.0.0.1 -ppassword -e 'SHOW TABLES'
 
 #    - name: Step 3 - Build with Maven
 #      run: mvn clean install
