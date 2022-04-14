@@ -96,11 +96,6 @@
 			<version>1.32.3</version>
 			<scope>test</scope>
 		</dependency>
-    <dependency>
-      <groupId>org.springframework.security</groupId>
-      <artifactId>spring-security-config</artifactId>
-      <version>5.4.6</version>
-    </dependency>
   </dependencies>
 
 	<build>
