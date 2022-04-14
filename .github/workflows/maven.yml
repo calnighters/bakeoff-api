@@ -35,15 +35,14 @@ jobs:
       run: |
         mysql -uroot -h127.0.0.1 -ppassword -e 'CREATE DATABASE bakeoff'
         mysql -uroot -h127.0.0.1 -ppassword bakeoff < schema.sql
-        mysql -uroot -h127.0.0.1 -ppassword -e 'SHOW TABLES'
 
-#    - name: Step 3 - Build with Maven
-#      run: mvn clean install
+    - name: Step 5 - Build with Maven
+      run: mvn clean install
       
-    - name: Step 4 - List the current directory
+    - name: Step 6 - List the current directory
       run: ls -a
       
-    - name: Step 5 - List the target directory
+    - name: Step 7 - List the target directory
       run: |
         cd target
         ls -a
