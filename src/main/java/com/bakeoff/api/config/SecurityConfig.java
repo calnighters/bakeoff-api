@@ -35,30 +35,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.authorizeRequests().antMatchers(HttpMethod.GET).permitAll();
-    http.authorizeRequests().antMatchers(HttpMethod.POST)
-        .hasAnyRole(ROLE_BAKEOFF_USER)
-        .anyRequest().authenticated()
-        .and()
-        .httpBasic()
-        .and()
-        .formLogin().disable()
-        .csrf().disable();
-    http.authorizeRequests().antMatchers(HttpMethod.PUT)
-        .hasAnyRole(ROLE_BAKEOFF_USER)
-        .anyRequest().authenticated()
-        .and()
-        .httpBasic()
-        .and()
-        .formLogin().disable()
-        .csrf().disable();
-    http.authorizeRequests().antMatchers(HttpMethod.DELETE)
-        .hasAnyRole(ROLE_BAKEOFF_USER)
-        .anyRequest().authenticated()
-        .and()
-        .httpBasic()
-        .and()
-        .formLogin().disable()
-        .csrf().disable();
+//    http.authorizeRequests().antMatchers(HttpMethod.POST)
+//        .hasAnyRole(ROLE_BAKEOFF_USER)
+//        .anyRequest().authenticated()
+//        .and()
+//        .httpBasic()
+//        .and()
+//        .formLogin().disable()
+//        .csrf().disable();
+//    http.authorizeRequests().antMatchers(HttpMethod.PUT)
+//        .hasAnyRole(ROLE_BAKEOFF_USER)
+//        .anyRequest().authenticated()
+//        .and()
+//        .httpBasic()
+//        .and()
+//        .formLogin().disable()
+//        .csrf().disable();
+//    http.authorizeRequests().antMatchers(HttpMethod.DELETE)
+//        .hasAnyRole(ROLE_BAKEOFF_USER)
+//        .anyRequest().authenticated()
+//        .and()
+//        .httpBasic()
+//        .and()
+//        .formLogin().disable()
+//        .csrf().disable();
 
   }
 }
