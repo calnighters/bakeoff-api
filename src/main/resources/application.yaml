@@ -34,3 +34,8 @@ server:
       file-date-format:
   ssl:
     enabled: false
+
+appsecurity:
+  bakeoff:
+    username: BAKEOFF_USER
+    password: ${BAKEOFF_USER_PASSWORD:test}
