@@ -24,9 +24,11 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: maven
+
+#    - name: Step 3 - Setup DB
         
     - name: Step 3 - Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn clean install
       
     - name: Step 4 - List the current directory
       run: ls -a
