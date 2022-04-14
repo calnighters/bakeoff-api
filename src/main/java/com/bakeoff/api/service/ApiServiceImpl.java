@@ -136,6 +136,7 @@ public class ApiServiceImpl implements ApiService {
   public BakerResponseDto getBakers() {
     List<Baker> bakers = StreamSupport
         .stream(bakerRepository.findAll().spliterator(), false)
+        .sorted(Comparator.comparing(Baker::getId))
         .collect(Collectors.toList());
     return
         BakerResponseDto.builder()
@@ -163,6 +164,7 @@ public class ApiServiceImpl implements ApiService {
   public JudgeResponseDto getJudges() {
     List<Judge> judges = StreamSupport
         .stream(judgeRepository.findAll().spliterator(), false)
+        .sorted(Comparator.comparing(Judge::getId))
         .collect(Collectors.toList());
     return
         JudgeResponseDto.builder()
