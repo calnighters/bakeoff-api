@@ -5,6 +5,7 @@ import com.bakeoff.api.dto.BakerResponseDto;
 import com.bakeoff.api.dto.JudgeResponseDto;
 import com.bakeoff.api.dto.ParticipantDto;
 import com.bakeoff.api.dto.ResultDto;
+import com.bakeoff.api.dto.UpdatePersonDto;
 
 public interface ApiService {
 
@@ -29,4 +30,10 @@ public interface ApiService {
   void addParticipant(ParticipantDto participantDto);
 
   void addResult(ResultDto resultDto);
+
+  void updateBaker(UpdatePersonDto updatePersonDto);
+
+  void updateJudge(UpdatePersonDto updatePersonDto);
+
+  void deleteBaker(String name);
 }

@@ -1,5 +1,5 @@
 connectionConfig:
   driver: "com.mysql.cj.jdbc.Driver"
-  url: "jdbc:mysql://localhost:30306/bakeoff?serverTimezone=UTC"
+  url: "jdbc:mysql://localhost:3306/bakeoff?serverTimezone=UTC"
   user: "root"
   password: "password"

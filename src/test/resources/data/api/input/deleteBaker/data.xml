@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dataset>
+
+  <BAKEOFF
+    ID="1"
+    BO_DATE="2021-01-01"
+    FOOD="Cheesecake"
+  />
+
+  <BAKER
+    ID="1"
+    BAKER_NAME="Callum"
+  />
+
+  <JUDGE
+    ID="1"
+    JUDGE_NAME="Zach"
+  />
+
+  <JUDGE
+    ID="2"
+    JUDGE_NAME="Harry"
+  />
+
+  <JUDGE_HISTORY
+    ID="1"
+    FK_JUDGE_ID="1"
+    FK_BAKEOFF_ID="1"
+  />
+
+  <JUDGE_HISTORY
+    ID="2"
+    FK_JUDGE_ID="2"
+    FK_BAKEOFF_ID="1"
+  />
+
+  <PARTICIPANT
+    ID="1"
+    FK_BAKER_ID="1"
+    FK_BAKEOFF_ID="1"
+    ENTRANT_ID="1"
+    DESCRIPTION="Lemon"
+  />
+
+  <RESULT
+    ID="1"
+    FK_PARTICIPANT_ID="1"
+    FK_JUDGE_ID="1"
+    TASTE="1"
+    APPEARANCE="2"
+  />
+
+  <RESULT
+    ID="2"
+    FK_PARTICIPANT_ID="1"
+    FK_JUDGE_ID="2"
+    TASTE="2"
+    APPEARANCE="3"
+  />
+</dataset>
