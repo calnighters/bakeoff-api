@@ -5,6 +5,7 @@ import com.bakeoff.api.dto.BakerResponseDto;
 import com.bakeoff.api.dto.JudgeResponseDto;
 import com.bakeoff.api.dto.ParticipantDto;
 import com.bakeoff.api.dto.ResultDto;
+import com.bakeoff.api.dto.UpdatePersonDto;
 import com.bakeoff.api.service.ApiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -61,6 +62,16 @@ public class ApiController {
     apiService.addBaker(name);
   }
 
+  @PutMapping(path = "/baker")
+  public void updateBaker(@RequestBody UpdatePersonDto updatePersonDto) {
+    apiService.updateBaker(updatePersonDto);
+  }
+
+  @DeleteMapping(path = "/baker")
+  public void deleteBaker(@RequestParam String name) {
+    apiService.deleteBaker(name);
+  }
+
   @GetMapping(path = "/baker")
   public BakerResponseDto getBakers() {
     return apiService.getBakers();
@@ -69,6 +80,11 @@ public class ApiController {
   @PostMapping(path = "/judge")
   public void addJudge(@RequestParam String name) {
     apiService.addJudge(name);
+  }
+
+  @PutMapping(path = "/judge")
+  public void updateJudge(@RequestBody UpdatePersonDto updatePersonDto) {
+    apiService.updateJudge(updatePersonDto);
   }
 
   @GetMapping(path = "/judge")

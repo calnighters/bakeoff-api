@@ -7,6 +7,7 @@ import com.bakeoff.api.dto.JudgeResponseDto;
 import com.bakeoff.api.dto.ParticipantDto;
 import com.bakeoff.api.dto.PersonDto;
 import com.bakeoff.api.dto.ResultDto;
+import com.bakeoff.api.dto.UpdatePersonDto;
 import com.bakeoff.api.exceptions.InvalidFormatException;
 import com.bakeoff.api.exceptions.NotFoundException;
 import com.bakeoff.api.model.Bakeoff;
@@ -23,6 +24,7 @@ import com.bakeoff.api.repositories.ParticipantRepository;
 import com.bakeoff.api.repositories.ResultRepository;
 import java.time.Clock;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -223,6 +225,39 @@ public class ApiServiceImpl implements ApiService {
             .appearance(resultDto.getAppearance())
             .build()
     );
+  }
+
+  @Override
+  public void updateBaker(UpdatePersonDto updatePersonDto) {
+    Baker baker = bakerRepository.findByBakerName(updatePersonDto.getOldName())
+        .orElseThrow(
+            () -> new NotFoundException(
+                "Baker cannot be found with the name: " + updatePersonDto.getOldName()));
+    baker.setBakerName(updatePersonDto.getNewName());
+    bakerRepository.save(baker);
+  }
+
+  @Override
+  public void updateJudge(UpdatePersonDto updatePersonDto) {
+    Judge judge = judgeRepository.findByJudgeName(updatePersonDto.getOldName())
+        .orElseThrow(
+            () -> new NotFoundException(
+                "Judge cannot be found with the name: " + updatePersonDto.getOldName()));
+    judge.setJudgeName(updatePersonDto.getNewName());
+    judgeRepository.save(judge);
+  }
+
+  @Override
+  public void deleteBaker(String name) {
+    Baker baker = bakerRepository.findByBakerName(name)
+        .orElseThrow(() -> new NotFoundException("Baker cannot be found with the name: " + name));
+    List<Result> results = new ArrayList<>();
+    for (Participant participant : baker.getParticipants()) {
+      results.addAll(participant.getResults());
+    }
+    resultRepository.deleteAll(results);
+    participantRepository.deleteAll(baker.getParticipants());
+    bakerRepository.delete(baker);
   }
 
   private PersonDto judgeToDto(Judge judge) {
