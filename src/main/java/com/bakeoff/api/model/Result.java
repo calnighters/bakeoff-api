@@ -1,5 +1,6 @@
 package com.bakeoff.api.model;
 
+import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -38,9 +39,9 @@ public class Result {
   private Participant fkParticipant;
 
   @Column(name = "APPEARANCE")
-  private Integer appearance;
+  private BigDecimal appearance;
 
   @Column(name = "TASTE")
-  private Integer taste;
+  private BigDecimal taste;
 
 }

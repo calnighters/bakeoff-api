@@ -25,6 +25,7 @@ import com.bakeoff.api.repositories.JudgeHistoryRepository;
 import com.bakeoff.api.repositories.JudgeRepository;
 import com.bakeoff.api.repositories.ParticipantRepository;
 import com.bakeoff.api.repositories.ResultRepository;
+import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -66,8 +67,8 @@ class ApiServiceImplTest {
         .build();
   }
 
-  private Result createResult(Integer id, Participant participant, Judge judge, Integer taste,
-      Integer appearance) {
+  private Result createResult(Integer id, Participant participant, Judge judge, BigDecimal taste,
+      BigDecimal appearance) {
     return Result.builder()
         .id(id)
         .fkParticipant(participant)
@@ -110,10 +111,10 @@ class ApiServiceImplTest {
       Participant participant2 = createParticipant(2, 2, "Lemon", baker2, bakeoff);
       bakeoff.setParticipants(List.of(participant1, participant2));
 
-      Result result1 = createResult(1, participant1, judge1, 10, 5);
-      Result result2 = createResult(2, participant1, judge2, 9, 4);
-      Result result3 = createResult(3, participant2, judge1, 8, 3);
-      Result result4 = createResult(4, participant2, judge2, 7, 2);
+      Result result1 = createResult(1, participant1, judge1, new BigDecimal(10), new BigDecimal(5));
+      Result result2 = createResult(2, participant1, judge2, new BigDecimal(9), new BigDecimal(4));
+      Result result3 = createResult(3, participant2, judge1, new BigDecimal(8), new BigDecimal(3));
+      Result result4 = createResult(4, participant2, judge2, new BigDecimal(7), new BigDecimal(2));
       participant1.setResults(List.of(result1, result2));
       participant2.setResults(List.of(result3, result4));
 
@@ -528,8 +529,8 @@ class ApiServiceImplTest {
       ResultDto resultDto = ResultDto.builder()
           .entrantId(1)
           .judgeName("Callum")
-          .taste(1)
-          .appearance(1)
+          .taste(new BigDecimal(1))
+          .appearance(new BigDecimal(1))
           .build();
 
       NotFoundException e = assertThrows(NotFoundException.class,
@@ -570,8 +571,8 @@ class ApiServiceImplTest {
       ResultDto resultDto = ResultDto.builder()
           .entrantId(1)
           .judgeName("Callum")
-          .taste(1)
-          .appearance(1)
+          .taste(new BigDecimal(1))
+          .appearance(new BigDecimal(1))
           .build();
 
       NotFoundException e = assertThrows(NotFoundException.class,
@@ -618,8 +619,8 @@ class ApiServiceImplTest {
       ResultDto resultDto = ResultDto.builder()
           .entrantId(1)
           .judgeName("Callum")
-          .taste(1)
-          .appearance(1)
+          .taste(new BigDecimal(1))
+          .appearance(new BigDecimal(1))
           .build();
 
       NotFoundException e = assertThrows(NotFoundException.class,
@@ -671,8 +672,8 @@ class ApiServiceImplTest {
       ResultDto resultDto = ResultDto.builder()
           .entrantId(1)
           .judgeName("Callum")
-          .taste(1)
-          .appearance(2)
+          .taste(new BigDecimal(1))
+          .appearance(new BigDecimal(2))
           .build();
 
       apiService.addResult(resultDto);
@@ -689,8 +690,8 @@ class ApiServiceImplTest {
 
         assertEquals(judge, result.getFkJudge());
         assertEquals(participant, result.getFkParticipant());
-        assertEquals(1, result.getTaste());
-        assertEquals(2, result.getAppearance());
+        assertEquals(new BigDecimal(1), result.getTaste());
+        assertEquals(new BigDecimal(2), result.getAppearance());
       }};
 
     }
@@ -871,14 +872,14 @@ class ApiServiceImplTest {
 
       Participant participant1 = createParticipant(1, 1, "Lemon", baker, bakeoff1);
 
-      Result result1 = createResult(1, participant1, judge1, 1, 2);
-      Result result2 = createResult(2, participant1, judge2, 2, 4);
+      Result result1 = createResult(1, participant1, judge1, new BigDecimal(1), new BigDecimal(2));
+      Result result2 = createResult(2, participant1, judge2, new BigDecimal(2), new BigDecimal(4));
       participant1.setResults(List.of(result1, result2));
 
       Participant participant2 = createParticipant(2, 1, "Vanilla", baker, bakeoff2);
 
-      Result result3 = createResult(3, participant2, judge1, 1, 2);
-      Result result4 = createResult(4, participant2, judge2, 2, 4);
+      Result result3 = createResult(3, participant2, judge1, new BigDecimal(1), new BigDecimal(2));
+      Result result4 = createResult(4, participant2, judge2, new BigDecimal(2), new BigDecimal(4));
       participant2.setResults(List.of(result3, result4));
 
       baker.setParticipants(List.of(participant1, participant2));
@@ -975,14 +976,14 @@ class ApiServiceImplTest {
 
       Participant participant1 = createParticipant(1, 1, "Lemon", baker, bakeoff1);
 
-      Result result1 = createResult(1, participant1, judge1, 1, 2);
-      Result result2 = createResult(2, participant1, judge2, 2, 4);
+      Result result1 = createResult(1, participant1, judge1, new BigDecimal(1), new BigDecimal(2));
+      Result result2 = createResult(2, participant1, judge2, new BigDecimal(2), new BigDecimal(4));
       participant1.setResults(List.of(result1, result2));
 
       Participant participant2 = createParticipant(2, 1, "Vanilla", baker, bakeoff2);
 
-      Result result3 = createResult(3, participant2, judge1, 1, 2);
-      Result result4 = createResult(4, participant2, judge2, 2, 4);
+      Result result3 = createResult(3, participant2, judge1, new BigDecimal(1), new BigDecimal(2));
+      Result result4 = createResult(4, participant2, judge2, new BigDecimal(2), new BigDecimal(4));
       participant2.setResults(List.of(result3, result4));
 
       baker.setParticipants(List.of(participant1, participant2));
@@ -998,8 +999,8 @@ class ApiServiceImplTest {
           () -> assertEquals(1, response.getBakers().size()),
           () -> assertEquals(1, response.getBakers().get(0).getId()),
           () -> assertEquals("Callum", response.getBakers().get(0).getName()),
-          () -> assertEquals(6, response.getBakers().get(0).getTotalTaste()),
-          () -> assertEquals(12, response.getBakers().get(0).getTotalAppearance()),
+          () -> assertEquals(new BigDecimal(6), response.getBakers().get(0).getTotalTaste()),
+          () -> assertEquals(new BigDecimal(12), response.getBakers().get(0).getTotalAppearance()),
           () -> assertEquals(2, response.getBakers().get(0).getEvents().size())
       );
     }

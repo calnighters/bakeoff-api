@@ -24,6 +24,7 @@ import com.bakeoff.api.repositories.JudgeHistoryRepository;
 import com.bakeoff.api.repositories.JudgeRepository;
 import com.bakeoff.api.repositories.ParticipantRepository;
 import com.bakeoff.api.repositories.ResultRepository;
+import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -287,20 +288,24 @@ public class ApiServiceImpl implements ApiService {
         .build();
   }
 
-  private Integer getTotalTaste(List<Participant> participants) {
+  private BigDecimal getTotalTaste(List<Participant> participants) {
     List<Result> results = new ArrayList<>();
     for (Participant participant : participants) {
       results.addAll(participant.getResults());
     }
-    return results.stream().mapToInt(Result::getTaste).sum();
+    return results.stream()
+        .map(Result::getTaste)
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
 
-  private Integer getTotalAppearance(List<Participant> participants) {
+  private BigDecimal getTotalAppearance(List<Participant> participants) {
     List<Result> results = new ArrayList<>();
     for (Participant participant : participants) {
       results.addAll(participant.getResults());
     }
-    return results.stream().mapToInt(Result::getAppearance).sum();
+    return results.stream()
+        .map(Result::getAppearance)
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
 
   private PersonDto judgeToPersonDto(Judge judge) {
