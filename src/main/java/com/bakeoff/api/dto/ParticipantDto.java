@@ -16,5 +16,8 @@ public class ParticipantDto {
   String name;
   List<ResultDto> results;
   String description;
+  String bakeoffDescription;
+  Integer totalTaste;
+  Integer totalAppearance;
 
 }

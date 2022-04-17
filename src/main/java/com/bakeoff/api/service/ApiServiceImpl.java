@@ -2,11 +2,13 @@ package com.bakeoff.api.service;
 
 import com.bakeoff.api.dto.BakeoffDto;
 import com.bakeoff.api.dto.BakeoffResponseDto;
+import com.bakeoff.api.dto.BakerDto;
 import com.bakeoff.api.dto.BakerResponseDto;
 import com.bakeoff.api.dto.JudgeResponseDto;
 import com.bakeoff.api.dto.ParticipantDto;
 import com.bakeoff.api.dto.PersonDto;
 import com.bakeoff.api.dto.ResultDto;
+import com.bakeoff.api.dto.TotalResponseDto;
 import com.bakeoff.api.dto.UpdatePersonDto;
 import com.bakeoff.api.exceptions.InvalidFormatException;
 import com.bakeoff.api.exceptions.NotFoundException;
@@ -144,7 +146,7 @@ public class ApiServiceImpl implements ApiService {
         BakerResponseDto.builder()
             .bakers(
                 bakers.stream()
-                    .map(this::bakerToDto)
+                    .map(this::bakerToPersonDto)
                     .collect(Collectors.toList())
             )
             .build();
@@ -172,7 +174,7 @@ public class ApiServiceImpl implements ApiService {
         JudgeResponseDto.builder()
             .judges(
                 judges.stream()
-                    .map(this::judgeToDto)
+                    .map(this::judgeToPersonDto)
                     .collect(Collectors.toList())
             )
             .build();
@@ -260,14 +262,55 @@ public class ApiServiceImpl implements ApiService {
     bakerRepository.delete(baker);
   }
 
-  private PersonDto judgeToDto(Judge judge) {
+  @Override
+  public TotalResponseDto getTotals() {
+    List<Baker> bakers = StreamSupport
+        .stream(bakerRepository.findAll().spliterator(), false)
+        .sorted(Comparator.comparing(Baker::getId))
+        .collect(Collectors.toList());
+    return TotalResponseDto.builder()
+        .bakers(
+            bakers.stream()
+                .map(this::bakerToDto)
+                .collect(Collectors.toList())
+        )
+        .build();
+  }
+
+  private BakerDto bakerToDto(Baker baker) {
+    return BakerDto.builder()
+        .id(baker.getId())
+        .name(baker.getBakerName())
+        .totalAppearance(getTotalAppearance(baker.getParticipants()))
+        .totalTaste(getTotalTaste(baker.getParticipants()))
+        .events(participantsToListDtos(baker.getParticipants()))
+        .build();
+  }
+
+  private Integer getTotalTaste(List<Participant> participants) {
+    List<Result> results = new ArrayList<>();
+    for (Participant participant : participants) {
+      results.addAll(participant.getResults());
+    }
+    return results.stream().mapToInt(Result::getTaste).sum();
+  }
+
+  private Integer getTotalAppearance(List<Participant> participants) {
+    List<Result> results = new ArrayList<>();
+    for (Participant participant : participants) {
+      results.addAll(participant.getResults());
+    }
+    return results.stream().mapToInt(Result::getAppearance).sum();
+  }
+
+  private PersonDto judgeToPersonDto(Judge judge) {
     return PersonDto.builder()
         .id(judge.getId())
         .name(judge.getJudgeName())
         .build();
   }
 
-  private PersonDto bakerToDto(Baker baker) {
+  private PersonDto bakerToPersonDto(Baker baker) {
     return PersonDto.builder()
         .id(baker.getId())
         .name(baker.getBakerName())
@@ -292,9 +335,13 @@ public class ApiServiceImpl implements ApiService {
   private ParticipantDto participantToDto(Participant participant) {
     return ParticipantDto.builder()
         .entrantId(participant.getEntrantId())
+        .bakerId(participant.getFkBaker().getId())
         .name(participant.getFkBaker().getBakerName())
         .results(scoresFromParticipant(participant))
         .description(participant.getDescription())
+        .bakeoffDescription(participant.getFkBakeoff().getFood())
+        .totalTaste(getTotalTaste(List.of(participant)))
+        .totalAppearance(getTotalAppearance(List.of(participant)))
         .build();
   }
 

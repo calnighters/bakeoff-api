@@ -5,6 +5,7 @@ import com.bakeoff.api.dto.BakerResponseDto;
 import com.bakeoff.api.dto.JudgeResponseDto;
 import com.bakeoff.api.dto.ParticipantDto;
 import com.bakeoff.api.dto.ResultDto;
+import com.bakeoff.api.dto.TotalResponseDto;
 import com.bakeoff.api.dto.UpdatePersonDto;
 import com.bakeoff.api.service.ApiService;
 import lombok.RequiredArgsConstructor;
@@ -95,5 +96,10 @@ public class ApiController {
   @PostMapping(path = "/result")
   public void addResult(@RequestBody ResultDto resultDto) {
     apiService.addResult(resultDto);
+  }
+
+  @GetMapping(path = "/totals")
+  public TotalResponseDto getTotals() {
+    return apiService.getTotals();
   }
 }
