@@ -341,6 +341,33 @@ public class BakeoffApiIT {
           new HttpEntity<>(headers));
       assertEquals(HttpStatus.OK, result.getStatusCode());
     }
+
+    @Test
+    @DisplayName("When a DELETE request is sent to delete a baker, but it isn't found, then error is returned")
+    @DataSet(value = "/data/api/input/deleteBaker/data.xml", cleanBefore = true)
+    void bakerNotFound() {
+      ResponseEntity<String> result = callService(ROOT_URL + "baker?name=Zach", HttpMethod.DELETE,
+          new HttpEntity<>(headers));
+      assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
+      assertTrue(result.getBody().contains("Baker cannot be found with the name: Zach"));
+    }
+  }
+
+  @Nested
+  @DisplayName("GET - get totals")
+  class GetTotals {
+
+    @Test
+    @DisplayName("When the method is called, then all bakers are returned")
+    @DataSet(value = "/data/api/input/getTotals/data.xml", cleanBefore = true)
+    void totalsReturned() throws JSONException {
+      ResponseEntity<String> result = callService(ROOT_URL + "totals", HttpMethod.GET,
+          new HttpEntity(headers));
+      assertEquals(HttpStatus.OK, result.getStatusCode());
+      JSONAssert.assertEquals(
+          TestUtils.getResource("/data/api/output/getTotals/totals.json"), result.getBody(),
+          true);
+    }
   }
 
   @TestConfiguration

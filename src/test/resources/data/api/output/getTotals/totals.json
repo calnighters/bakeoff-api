@@ -1,0 +1,35 @@
+{
+  "bakers": [
+    {
+      "id": 1,
+      "name": "Callum",
+      "totalTaste": 3,
+      "totalAppearance": 5,
+      "events": [
+        {
+          "entrantId": 1,
+          "bakerId": 1,
+          "name": "Callum",
+          "results": [
+            {
+              "entrantId": 1,
+              "judgeName": "Zach",
+              "appearance": 2,
+              "taste": 1
+            },
+            {
+              "entrantId": 1,
+              "judgeName": "Harry",
+              "appearance": 3,
+              "taste": 2
+            }
+          ],
+          "description": "Lemon",
+          "bakeoffDescription": "Cheesecake",
+          "totalTaste": 3,
+          "totalAppearance": 5
+        }
+      ]
+    }
+  ]
+}

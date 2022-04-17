@@ -10,6 +10,7 @@ import com.bakeoff.api.dto.BakerResponseDto;
 import com.bakeoff.api.dto.JudgeResponseDto;
 import com.bakeoff.api.dto.ParticipantDto;
 import com.bakeoff.api.dto.ResultDto;
+import com.bakeoff.api.dto.TotalResponseDto;
 import com.bakeoff.api.dto.UpdatePersonDto;
 import com.bakeoff.api.exceptions.NotFoundException;
 import com.bakeoff.api.model.Bakeoff;
@@ -934,6 +935,73 @@ class ApiServiceImplTest {
       );
 
       assertEquals("Baker cannot be found with the name: Callum", e.getMessage());
+    }
+
+  }
+
+  @Nested
+  @DisplayName("getTotals method")
+  class GetTotalsMethod {
+
+    @Test
+    @DisplayName("When the method is called, then the baker and their events are returned.")
+    void bakersReturned(
+        @Injectable ResultRepository resultRepository,
+        @Injectable BakeoffRepistory bakeoffRepistory,
+        @Injectable JudgeRepository judgeRepository,
+        @Injectable BakerRepository bakerRepository,
+        @Injectable ParticipantRepository participantRepository,
+        @Injectable JudgeHistoryRepository judgeHistoryRepository
+    ) {
+      Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
+      ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
+          bakeoffRepistory, participantRepository, judgeHistoryRepository, clock);
+
+      Bakeoff bakeoff1 = Bakeoff.builder()
+          .id(1)
+          .boDate(LocalDate.of(2021, 1, 1))
+          .food("Cheesecake")
+          .build();
+      Bakeoff bakeoff2 = Bakeoff.builder()
+          .id(1)
+          .boDate(LocalDate.of(2021, 1, 1))
+          .food("Icecream")
+          .build();
+
+      Baker baker = createBaker(1, "Callum");
+
+      Judge judge1 = createJudge(1, "Zach");
+      Judge judge2 = createJudge(2, "Harry");
+
+      Participant participant1 = createParticipant(1, 1, "Lemon", baker, bakeoff1);
+
+      Result result1 = createResult(1, participant1, judge1, 1, 2);
+      Result result2 = createResult(2, participant1, judge2, 2, 4);
+      participant1.setResults(List.of(result1, result2));
+
+      Participant participant2 = createParticipant(2, 1, "Vanilla", baker, bakeoff2);
+
+      Result result3 = createResult(3, participant2, judge1, 1, 2);
+      Result result4 = createResult(4, participant2, judge2, 2, 4);
+      participant2.setResults(List.of(result3, result4));
+
+      baker.setParticipants(List.of(participant1, participant2));
+
+      new Expectations() {{
+        bakerRepository.findAll();
+        result = List.of(baker);
+      }};
+
+      TotalResponseDto response = apiService.getTotals();
+
+      assertAll(
+          () -> assertEquals(1, response.getBakers().size()),
+          () -> assertEquals(1, response.getBakers().get(0).getId()),
+          () -> assertEquals("Callum", response.getBakers().get(0).getName()),
+          () -> assertEquals(6, response.getBakers().get(0).getTotalTaste()),
+          () -> assertEquals(12, response.getBakers().get(0).getTotalAppearance()),
+          () -> assertEquals(2, response.getBakers().get(0).getEvents().size())
+      );
     }
 
   }
