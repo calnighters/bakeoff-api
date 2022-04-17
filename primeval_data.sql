@@ -26,7 +26,7 @@ insert into PARTICIPANT values (5,5,1,5, 'Biscoff');
 insert into PARTICIPANT values (6,6,1,6, 'Chocolate Orange');
 insert into PARTICIPANT values (7,7,1,7, 'Mini Egg');
 insert into PARTICIPANT values (8,8,1,8, 'Triple Layered Cookie Dough');
-insert into PARTICIPANT values (9,9,1,9, 'Rasberry and White Chocolate');
+insert into PARTICIPANT values (9,9,1,9, 'Lemon and Raspberry');
 insert into PARTICIPANT values (10,10,1,10, 'Baked Creme Egg');
 insert into PARTICIPANT values (11,11,1,11, 'Surprise');
 

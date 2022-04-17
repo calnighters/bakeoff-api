@@ -358,7 +358,7 @@ public class BakeoffApiIT {
   class GetTotals {
 
     @Test
-    @DisplayName("When the method is called, then all bakers are returned")
+    @DisplayName("When a GET method is sent to get totals, then all bakers are returned")
     @DataSet(value = "/data/api/input/getTotals/data.xml", cleanBefore = true)
     void totalsReturned() throws JSONException {
       ResponseEntity<String> result = callService(ROOT_URL + "totals", HttpMethod.GET,
@@ -368,6 +368,40 @@ public class BakeoffApiIT {
           TestUtils.getResource("/data/api/output/getTotals/totals.json"), result.getBody(),
           true);
     }
+  }
+
+  @Nested
+  @DisplayName("PUT - update result")
+  class UpdateResult {
+
+    @Test
+    @DisplayName("When a PUT request is sent to update a result, the result is updated")
+    @DataSet(value = "/data/api/input/updateResult/data.xml", cleanBefore = true)
+    @ExpectedDataSet(value = "/data/api/output/updateResult/data.xml")
+    void bakerDeleted() {
+      ResponseEntity<String> result = callService(ROOT_URL + "result", HttpMethod.PUT,
+          new HttpEntity<>(TestUtils.getResource("/data/api/input/updateResult/valid.json"),
+              headers));
+      assertEquals(HttpStatus.OK, result.getStatusCode());
+    }
+
+  }
+
+  @Nested
+  @DisplayName("DELETE - delete result")
+  class DeleteResult {
+
+    @Test
+    @DisplayName("When a DELETE request is sent to delete a result, the result is deleted")
+    @DataSet(value = "/data/api/input/deleteResult/data.xml", cleanBefore = true)
+    @ExpectedDataSet(value = "/data/api/output/deleteResult/data.xml")
+    void bakerDeleted() {
+      ResponseEntity<String> result = callService(ROOT_URL + "result", HttpMethod.DELETE,
+          new HttpEntity<>(TestUtils.getResource("/data/api/input/deleteResult/valid.json"),
+              headers));
+      assertEquals(HttpStatus.OK, result.getStatusCode());
+    }
+
   }
 
   @TestConfiguration

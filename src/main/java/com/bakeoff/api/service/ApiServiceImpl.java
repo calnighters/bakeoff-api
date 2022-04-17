@@ -278,6 +278,48 @@ public class ApiServiceImpl implements ApiService {
         .build();
   }
 
+  @Override
+  public void updateResult(ResultDto resultDto) {
+    Bakeoff bakeoff = bakeoffRepistory.findByBoDate(LocalDate.now(clock))
+        .orElseThrow(
+            () -> new NotFoundException("Bakeoff not found for date: " + LocalDate.now(clock)));
+    Judge judge = judgeRepository.findByJudgeName(resultDto.getJudgeName())
+        .orElseThrow(
+            () -> new NotFoundException(
+                "Judge cannot be found with the name: " + resultDto.getJudgeName()));
+    Participant participant = participantRepository.findByEntrantIdAndFkBakeoff(
+        resultDto.getEntrantId(), bakeoff).orElseThrow(() -> new NotFoundException(
+        "Participant not found for Entrant ID: " + resultDto.getEntrantId() + " and date: "
+            + LocalDate.now(clock)));
+    Result result = resultRepository.findByFkJudgeAndFkParticipant(judge, participant).orElseThrow(
+        () -> new NotFoundException(
+            "Result not found for Judge: " + judge.getJudgeName() + " and Entrant ID: "
+                + participant.getEntrantId()));
+    result.setAppearance(resultDto.getAppearance());
+    result.setTaste(resultDto.getTaste());
+    resultRepository.save(result);
+  }
+
+  @Override
+  public void deleteResult(ResultDto resultDto) {
+    Bakeoff bakeoff = bakeoffRepistory.findByBoDate(LocalDate.now(clock))
+        .orElseThrow(
+            () -> new NotFoundException("Bakeoff not found for date: " + LocalDate.now(clock)));
+    Judge judge = judgeRepository.findByJudgeName(resultDto.getJudgeName())
+        .orElseThrow(
+            () -> new NotFoundException(
+                "Judge cannot be found with the name: " + resultDto.getJudgeName()));
+    Participant participant = participantRepository.findByEntrantIdAndFkBakeoff(
+        resultDto.getEntrantId(), bakeoff).orElseThrow(() -> new NotFoundException(
+        "Participant not found for Entrant ID: " + resultDto.getEntrantId() + " and date: "
+            + LocalDate.now(clock)));
+    Result result = resultRepository.findByFkJudgeAndFkParticipant(judge, participant).orElseThrow(
+        () -> new NotFoundException(
+            "Result not found for Judge: " + judge.getJudgeName() + " and Entrant ID: "
+                + participant.getEntrantId()));
+    resultRepository.delete(result);
+  }
+
   private BakerDto bakerToDto(Baker baker) {
     return BakerDto.builder()
         .id(baker.getId())
