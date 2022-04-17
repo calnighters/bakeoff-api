@@ -3,15 +3,20 @@ spring:
     banner-mode: off
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:${JAWSDB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: jdbc:${JAWSDB_URL:mysql://localhost:30306/bakeoff?serverTimezone=UTC}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:password}
     hikari:
       maximum-pool-size: 5
   jpa:
     hibernate:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+  security:
+    user:
+      name: BAKEOFF_USER
+      password: ${BAKEOFF_USER_PASSWORD:test}
+      roles: USER
 server:
   port: 8090
   tomcat:
@@ -35,7 +40,6 @@ server:
   ssl:
     enabled: false
 
-appsecurity:
-  bakeoff:
-    username: BAKEOFF_USER
-    password: ${BAKEOFF_USER_PASSWORD:test}
+securedroutes:
+  unsecured: ["/bakeoff", "/bakeoff/latest", "/bakeoff/totals"]
+  secured: ["/bakeoff/**"]

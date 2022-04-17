@@ -39,6 +39,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>mysql</groupId>
@@ -168,9 +172,9 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>3.0.0-M5</version>
 				<configuration>
-					<argLine>
-						-javaagent:${settings.localRepository}/org/jmockit/jmockit/1.48/jmockit-1.48.jar
-					</argLine>
+<!--					<argLine>-->
+<!--						-javaagent:${settings.localRepository}/org/jmockit/jmockit/1.48/jmockit-1.48.jar-->
+<!--					</argLine>-->
 					<statelessTestsetReporter
 						implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5Xml30StatelessReporter">
 						<disable>false</disable>
