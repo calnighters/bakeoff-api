@@ -170,6 +170,7 @@ public class ApiServiceImpl implements ApiService {
     List<Judge> judges = StreamSupport
         .stream(judgeRepository.findAll().spliterator(), false)
         .sorted(Comparator.comparing(Judge::getId))
+        .filter(judge -> !judge.getJudgeName().equals("UNKNOWN"))
         .collect(Collectors.toList());
     return
         JudgeResponseDto.builder()
