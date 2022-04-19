@@ -93,11 +93,6 @@ public class ApiController {
     apiService.updateJudge(updatePersonDto);
   }
 
-  @DeleteMapping(path = "judge")
-  public void deleteJudge(@RequestParam String judgeName) {
-    apiService.deleteJudge(judgeName);
-  }
-
   @GetMapping(path = "/judge")
   public JudgeResponseDto getJudges() {
     return apiService.getJudges();

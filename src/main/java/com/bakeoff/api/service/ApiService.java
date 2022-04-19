@@ -45,6 +45,4 @@ public interface ApiService {
   void deleteResult(ResultDto resultDto);
 
   void updateParticipant(ParticipantDto participantDto);
-
-  void deleteJudge(String judgeName);
 }

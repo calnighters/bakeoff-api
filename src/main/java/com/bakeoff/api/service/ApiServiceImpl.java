@@ -170,7 +170,6 @@ public class ApiServiceImpl implements ApiService {
     List<Judge> judges = StreamSupport
         .stream(judgeRepository.findAll().spliterator(), false)
         .sorted(Comparator.comparing(Judge::getId))
-        .filter(judge -> !judge.getJudgeName().equals("UNKNOWN"))
         .collect(Collectors.toList());
     return
         JudgeResponseDto.builder()
@@ -335,23 +334,6 @@ public class ApiServiceImpl implements ApiService {
     participant.setDescription(participantDto.getDescription());
     participant.setFkBaker(baker);
     participantRepository.save(participant);
-  }
-
-  @Override
-  public void deleteJudge(String judgeName) {
-    Judge placeholderJudge = judgeRepository.findByJudgeName("UNKNOWN")
-        .orElseThrow(() -> new NotFoundException("Placeholder Judge has not been found."));
-    Judge judge = judgeRepository.findByJudgeName(judgeName)
-        .orElseThrow(() -> new NotFoundException("Judge not found with name: " + judgeName));
-    List<JudgeHistory> histories = judge.getJudgeHistories().stream()
-        .map(judgeHistory -> updateJudgeHistory(judgeHistory, placeholderJudge))
-        .collect(Collectors.toList());
-    List<Result> results = judge.getResults().stream()
-        .map(result -> updateResults(result, placeholderJudge))
-        .collect(Collectors.toList());
-    judgeHistoryRepository.saveAll(histories);
-    resultRepository.saveAll(results);
-    judgeRepository.delete(judge);
   }
 
   private Result updateResults(Result result, Judge judge) {
