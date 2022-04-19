@@ -36,7 +36,6 @@ jobs:
       run: mvn clean install
 
   release:
-    if: ${{ github.ref == 'main' }}
     runs-on: ubuntu-latest
     needs: build
     steps:
