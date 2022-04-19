@@ -2,7 +2,7 @@ name: Bakeoff API Build Plan
 
 on:
   push:
-    branches: [ master, feature/**, bugfix/** ]
+    branches: [ main, feature/**, bugfix/** ]
   workflow_dispatch:
 
 jobs:
@@ -34,3 +34,18 @@ jobs:
 
     - name: Step 5 - Build with Maven
       run: mvn clean install
+
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+    if: ${{ github.ref == 'refs/heads/main' }}
+    steps:
+      - name: Step 6 - Checkout for release to Herkou
+        uses: actions/checkout@v2
+
+      - name: Step 7 - Release to heroku
+        uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "bakeoff-api" #Must be unique in Heroku
+          heroku_email: ${{secrets.HEROKU_EMAIL}}

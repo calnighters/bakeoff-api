@@ -25,6 +25,7 @@ import com.bakeoff.api.repositories.JudgeHistoryRepository;
 import com.bakeoff.api.repositories.JudgeRepository;
 import com.bakeoff.api.repositories.ParticipantRepository;
 import com.bakeoff.api.repositories.ResultRepository;
+import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -66,8 +67,8 @@ class ApiServiceImplTest {
         .build();
   }
 
-  private Result createResult(Integer id, Participant participant, Judge judge, Integer taste,
-      Integer appearance) {
+  private Result createResult(Integer id, Participant participant, Judge judge, BigDecimal taste,
+      BigDecimal appearance) {
     return Result.builder()
         .id(id)
         .fkParticipant(participant)
@@ -110,10 +111,10 @@ class ApiServiceImplTest {
       Participant participant2 = createParticipant(2, 2, "Lemon", baker2, bakeoff);
       bakeoff.setParticipants(List.of(participant1, participant2));
 
-      Result result1 = createResult(1, participant1, judge1, 10, 5);
-      Result result2 = createResult(2, participant1, judge2, 9, 4);
-      Result result3 = createResult(3, participant2, judge1, 8, 3);
-      Result result4 = createResult(4, participant2, judge2, 7, 2);
+      Result result1 = createResult(1, participant1, judge1, new BigDecimal(10), new BigDecimal(5));
+      Result result2 = createResult(2, participant1, judge2, new BigDecimal(9), new BigDecimal(4));
+      Result result3 = createResult(3, participant2, judge1, new BigDecimal(8), new BigDecimal(3));
+      Result result4 = createResult(4, participant2, judge2, new BigDecimal(7), new BigDecimal(2));
       participant1.setResults(List.of(result1, result2));
       participant2.setResults(List.of(result3, result4));
 
@@ -528,8 +529,8 @@ class ApiServiceImplTest {
       ResultDto resultDto = ResultDto.builder()
           .entrantId(1)
           .judgeName("Callum")
-          .taste(1)
-          .appearance(1)
+          .taste(new BigDecimal(1))
+          .appearance(new BigDecimal(1))
           .build();
 
       NotFoundException e = assertThrows(NotFoundException.class,
@@ -570,8 +571,8 @@ class ApiServiceImplTest {
       ResultDto resultDto = ResultDto.builder()
           .entrantId(1)
           .judgeName("Callum")
-          .taste(1)
-          .appearance(1)
+          .taste(new BigDecimal(1))
+          .appearance(new BigDecimal(1))
           .build();
 
       NotFoundException e = assertThrows(NotFoundException.class,
@@ -618,8 +619,8 @@ class ApiServiceImplTest {
       ResultDto resultDto = ResultDto.builder()
           .entrantId(1)
           .judgeName("Callum")
-          .taste(1)
-          .appearance(1)
+          .taste(new BigDecimal(1))
+          .appearance(new BigDecimal(1))
           .build();
 
       NotFoundException e = assertThrows(NotFoundException.class,
@@ -671,8 +672,8 @@ class ApiServiceImplTest {
       ResultDto resultDto = ResultDto.builder()
           .entrantId(1)
           .judgeName("Callum")
-          .taste(1)
-          .appearance(2)
+          .taste(new BigDecimal(1))
+          .appearance(new BigDecimal(2))
           .build();
 
       apiService.addResult(resultDto);
@@ -689,8 +690,8 @@ class ApiServiceImplTest {
 
         assertEquals(judge, result.getFkJudge());
         assertEquals(participant, result.getFkParticipant());
-        assertEquals(1, result.getTaste());
-        assertEquals(2, result.getAppearance());
+        assertEquals(new BigDecimal(1), result.getTaste());
+        assertEquals(new BigDecimal(2), result.getAppearance());
       }};
 
     }
@@ -871,14 +872,14 @@ class ApiServiceImplTest {
 
       Participant participant1 = createParticipant(1, 1, "Lemon", baker, bakeoff1);
 
-      Result result1 = createResult(1, participant1, judge1, 1, 2);
-      Result result2 = createResult(2, participant1, judge2, 2, 4);
+      Result result1 = createResult(1, participant1, judge1, new BigDecimal(1), new BigDecimal(2));
+      Result result2 = createResult(2, participant1, judge2, new BigDecimal(2), new BigDecimal(4));
       participant1.setResults(List.of(result1, result2));
 
       Participant participant2 = createParticipant(2, 1, "Vanilla", baker, bakeoff2);
 
-      Result result3 = createResult(3, participant2, judge1, 1, 2);
-      Result result4 = createResult(4, participant2, judge2, 2, 4);
+      Result result3 = createResult(3, participant2, judge1, new BigDecimal(1), new BigDecimal(2));
+      Result result4 = createResult(4, participant2, judge2, new BigDecimal(2), new BigDecimal(4));
       participant2.setResults(List.of(result3, result4));
 
       baker.setParticipants(List.of(participant1, participant2));
@@ -975,14 +976,14 @@ class ApiServiceImplTest {
 
       Participant participant1 = createParticipant(1, 1, "Lemon", baker, bakeoff1);
 
-      Result result1 = createResult(1, participant1, judge1, 1, 2);
-      Result result2 = createResult(2, participant1, judge2, 2, 4);
+      Result result1 = createResult(1, participant1, judge1, new BigDecimal(1), new BigDecimal(2));
+      Result result2 = createResult(2, participant1, judge2, new BigDecimal(2), new BigDecimal(4));
       participant1.setResults(List.of(result1, result2));
 
       Participant participant2 = createParticipant(2, 1, "Vanilla", baker, bakeoff2);
 
-      Result result3 = createResult(3, participant2, judge1, 1, 2);
-      Result result4 = createResult(4, participant2, judge2, 2, 4);
+      Result result3 = createResult(3, participant2, judge1, new BigDecimal(1), new BigDecimal(2));
+      Result result4 = createResult(4, participant2, judge2, new BigDecimal(2), new BigDecimal(4));
       participant2.setResults(List.of(result3, result4));
 
       baker.setParticipants(List.of(participant1, participant2));
@@ -998,10 +999,510 @@ class ApiServiceImplTest {
           () -> assertEquals(1, response.getBakers().size()),
           () -> assertEquals(1, response.getBakers().get(0).getId()),
           () -> assertEquals("Callum", response.getBakers().get(0).getName()),
-          () -> assertEquals(6, response.getBakers().get(0).getTotalTaste()),
-          () -> assertEquals(12, response.getBakers().get(0).getTotalAppearance()),
+          () -> assertEquals(new BigDecimal(6), response.getBakers().get(0).getTotalTaste()),
+          () -> assertEquals(new BigDecimal(12), response.getBakers().get(0).getTotalAppearance()),
           () -> assertEquals(2, response.getBakers().get(0).getEvents().size())
       );
+    }
+
+  }
+
+  @Nested
+  @DisplayName("updateResult method")
+  class UpdateResultMethod {
+
+    @Test
+    @DisplayName("When the method is called, then the result is updated.")
+    void resultUpdated(
+        @Injectable ResultRepository resultRepository,
+        @Injectable BakeoffRepistory bakeoffRepistory,
+        @Injectable JudgeRepository judgeRepository,
+        @Injectable BakerRepository bakerRepository,
+        @Injectable ParticipantRepository participantRepository,
+        @Injectable JudgeHistoryRepository judgeHistoryRepository
+    ) {
+      Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
+      ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
+          bakeoffRepistory, participantRepository, judgeHistoryRepository, clock);
+
+      Bakeoff bakeoff1 = Bakeoff.builder()
+          .id(1)
+          .boDate(LocalDate.of(2021, 1, 1))
+          .food("Cheesecake")
+          .build();
+
+      Baker baker = createBaker(1, "Callum");
+
+      Judge judge1 = createJudge(1, "Zach");
+      Judge judge2 = createJudge(2, "Harry");
+
+      Participant participant1 = createParticipant(1, 1, "Lemon", baker, bakeoff1);
+
+      Result result1 = createResult(1, participant1, judge1, new BigDecimal(1), new BigDecimal(2));
+      Result result2 = createResult(2, participant1, judge2, new BigDecimal(2), new BigDecimal(4));
+      participant1.setResults(List.of(result1, result2));
+
+      baker.setParticipants(List.of(participant1));
+
+      new Expectations() {{
+        bakeoffRepistory.findByBoDate(withInstanceOf(LocalDate.class));
+        result = Optional.of(bakeoff1);
+        judgeRepository.findByJudgeName(withInstanceOf(String.class));
+        result = Optional.of(judge1);
+        participantRepository.findByEntrantIdAndFkBakeoff(withInstanceOf(Integer.class),
+            withInstanceOf(Bakeoff.class));
+        result = Optional.of(participant1);
+        resultRepository.findByFkJudgeAndFkParticipant(withInstanceOf(Judge.class),
+            withInstanceOf(Participant.class));
+        result = Optional.of(result1);
+      }};
+
+      apiService.updateResult(ResultDto.builder()
+          .entrantId(1)
+          .judgeName("Zach")
+          .taste(new BigDecimal(7))
+          .appearance(new BigDecimal(4))
+          .build());
+
+      new Verifications() {{
+        Result result;
+        resultRepository.save(result = withCapture());
+
+        assertEquals(participant1, result.getFkParticipant());
+        assertEquals(judge1, result.getFkJudge());
+        assertEquals(new BigDecimal(7), result.getTaste());
+        assertEquals(new BigDecimal(4), result.getAppearance());
+      }};
+    }
+
+    @Test
+    @DisplayName("When the method is called, but the result isn't found, then error is thrown.")
+    void resultNotFound(
+        @Injectable ResultRepository resultRepository,
+        @Injectable BakeoffRepistory bakeoffRepistory,
+        @Injectable JudgeRepository judgeRepository,
+        @Injectable BakerRepository bakerRepository,
+        @Injectable ParticipantRepository participantRepository,
+        @Injectable JudgeHistoryRepository judgeHistoryRepository
+    ) {
+      Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
+      ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
+          bakeoffRepistory, participantRepository, judgeHistoryRepository, clock);
+
+      Bakeoff bakeoff1 = Bakeoff.builder()
+          .id(1)
+          .boDate(LocalDate.of(2021, 1, 1))
+          .food("Cheesecake")
+          .build();
+
+      Baker baker = createBaker(1, "Callum");
+
+      Judge judge1 = createJudge(1, "Zach");
+      Judge judge2 = createJudge(2, "Harry");
+
+      Participant participant1 = createParticipant(1, 1, "Lemon", baker, bakeoff1);
+
+      Result result2 = createResult(2, participant1, judge2, new BigDecimal(2), new BigDecimal(4));
+      participant1.setResults(List.of(result2));
+
+      baker.setParticipants(List.of(participant1));
+
+      new Expectations() {{
+        bakeoffRepistory.findByBoDate(withInstanceOf(LocalDate.class));
+        result = Optional.of(bakeoff1);
+        judgeRepository.findByJudgeName(withInstanceOf(String.class));
+        result = Optional.of(judge1);
+        participantRepository.findByEntrantIdAndFkBakeoff(withInstanceOf(Integer.class),
+            withInstanceOf(Bakeoff.class));
+        result = Optional.of(participant1);
+        resultRepository.findByFkJudgeAndFkParticipant(withInstanceOf(Judge.class),
+            withInstanceOf(Participant.class));
+        result = Optional.empty();
+      }};
+
+      NotFoundException e = assertThrows(NotFoundException.class,
+          () -> apiService.updateResult(ResultDto.builder()
+              .entrantId(1)
+              .judgeName("Zach")
+              .taste(new BigDecimal(7))
+              .appearance(new BigDecimal(4))
+              .build())
+      );
+
+      assertEquals("Result not found for Judge: Zach and Entrant ID: 1", e.getMessage());
+    }
+
+    @Test
+    @DisplayName("When the method is called, but the participant isn't found, then error is thrown.")
+    void participantNotFound(
+        @Injectable ResultRepository resultRepository,
+        @Injectable BakeoffRepistory bakeoffRepistory,
+        @Injectable JudgeRepository judgeRepository,
+        @Injectable BakerRepository bakerRepository,
+        @Injectable ParticipantRepository participantRepository,
+        @Injectable JudgeHistoryRepository judgeHistoryRepository
+    ) {
+      Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
+      ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
+          bakeoffRepistory, participantRepository, judgeHistoryRepository, clock);
+
+      Bakeoff bakeoff1 = Bakeoff.builder()
+          .id(1)
+          .boDate(LocalDate.of(2021, 1, 1))
+          .food("Cheesecake")
+          .build();
+
+      Baker baker = createBaker(1, "Callum");
+
+      Judge judge1 = createJudge(1, "Zach");
+      Judge judge2 = createJudge(2, "Harry");
+
+      baker.setParticipants(Collections.emptyList());
+
+      new Expectations() {{
+        bakeoffRepistory.findByBoDate(withInstanceOf(LocalDate.class));
+        result = Optional.of(bakeoff1);
+        judgeRepository.findByJudgeName(withInstanceOf(String.class));
+        result = Optional.of(judge1);
+        participantRepository.findByEntrantIdAndFkBakeoff(withInstanceOf(Integer.class),
+            withInstanceOf(Bakeoff.class));
+        result = Optional.empty();
+      }};
+
+      NotFoundException e = assertThrows(NotFoundException.class,
+          () -> apiService.updateResult(ResultDto.builder()
+              .entrantId(1)
+              .judgeName("Zach")
+              .taste(new BigDecimal(7))
+              .appearance(new BigDecimal(4))
+              .build())
+      );
+
+      assertEquals("Participant not found for Entrant ID: 1 and date: 2021-01-01", e.getMessage());
+    }
+
+    @Test
+    @DisplayName("When the method is called, but the judge isn't found, then error is thrown.")
+    void judgeNotFound(
+        @Injectable ResultRepository resultRepository,
+        @Injectable BakeoffRepistory bakeoffRepistory,
+        @Injectable JudgeRepository judgeRepository,
+        @Injectable BakerRepository bakerRepository,
+        @Injectable ParticipantRepository participantRepository,
+        @Injectable JudgeHistoryRepository judgeHistoryRepository
+    ) {
+      Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
+      ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
+          bakeoffRepistory, participantRepository, judgeHistoryRepository, clock);
+
+      Bakeoff bakeoff1 = Bakeoff.builder()
+          .id(1)
+          .boDate(LocalDate.of(2021, 1, 1))
+          .food("Cheesecake")
+          .build();
+
+      Baker baker = createBaker(1, "Callum");
+
+      baker.setParticipants(Collections.emptyList());
+
+      new Expectations() {{
+        bakeoffRepistory.findByBoDate(withInstanceOf(LocalDate.class));
+        result = Optional.of(bakeoff1);
+        judgeRepository.findByJudgeName(withInstanceOf(String.class));
+        result = Optional.empty();
+      }};
+
+      NotFoundException e = assertThrows(NotFoundException.class,
+          () -> apiService.updateResult(ResultDto.builder()
+              .entrantId(1)
+              .judgeName("Zach")
+              .taste(new BigDecimal(7))
+              .appearance(new BigDecimal(4))
+              .build())
+      );
+
+      assertEquals("Judge cannot be found with the name: Zach", e.getMessage());
+    }
+
+    @Test
+    @DisplayName("When the method is called, but the bakeoff isn't found, then error is thrown.")
+    void bakeoffNotFound(
+        @Injectable ResultRepository resultRepository,
+        @Injectable BakeoffRepistory bakeoffRepistory,
+        @Injectable JudgeRepository judgeRepository,
+        @Injectable BakerRepository bakerRepository,
+        @Injectable ParticipantRepository participantRepository,
+        @Injectable JudgeHistoryRepository judgeHistoryRepository
+    ) {
+      Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
+      ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
+          bakeoffRepistory, participantRepository, judgeHistoryRepository, clock);
+
+      new Expectations() {{
+        bakeoffRepistory.findByBoDate(withInstanceOf(LocalDate.class));
+        result = Optional.empty();
+      }};
+
+      NotFoundException e = assertThrows(NotFoundException.class,
+          () -> apiService.updateResult(ResultDto.builder()
+              .entrantId(1)
+              .judgeName("Zach")
+              .taste(new BigDecimal(7))
+              .appearance(new BigDecimal(4))
+              .build())
+      );
+
+      assertEquals("Bakeoff not found for date: 2021-01-01", e.getMessage());
+    }
+
+  }
+
+  @Nested
+  @DisplayName("deleteResult method")
+  class DeleteResultMethod {
+
+    @Test
+    @DisplayName("When the method is called, then the result is deleted.")
+    void resultUpdated(
+        @Injectable ResultRepository resultRepository,
+        @Injectable BakeoffRepistory bakeoffRepistory,
+        @Injectable JudgeRepository judgeRepository,
+        @Injectable BakerRepository bakerRepository,
+        @Injectable ParticipantRepository participantRepository,
+        @Injectable JudgeHistoryRepository judgeHistoryRepository
+    ) {
+      Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
+      ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
+          bakeoffRepistory, participantRepository, judgeHistoryRepository, clock);
+
+      Bakeoff bakeoff1 = Bakeoff.builder()
+          .id(1)
+          .boDate(LocalDate.of(2021, 1, 1))
+          .food("Cheesecake")
+          .build();
+
+      Baker baker = createBaker(1, "Callum");
+
+      Judge judge1 = createJudge(1, "Zach");
+      Judge judge2 = createJudge(2, "Harry");
+
+      Participant participant1 = createParticipant(1, 1, "Lemon", baker, bakeoff1);
+
+      Result result1 = createResult(1, participant1, judge1, new BigDecimal(1), new BigDecimal(2));
+      Result result2 = createResult(2, participant1, judge2, new BigDecimal(2), new BigDecimal(4));
+      participant1.setResults(List.of(result1, result2));
+
+      baker.setParticipants(List.of(participant1));
+
+      new Expectations() {{
+        bakeoffRepistory.findByBoDate(withInstanceOf(LocalDate.class));
+        result = Optional.of(bakeoff1);
+        judgeRepository.findByJudgeName(withInstanceOf(String.class));
+        result = Optional.of(judge1);
+        participantRepository.findByEntrantIdAndFkBakeoff(withInstanceOf(Integer.class),
+            withInstanceOf(Bakeoff.class));
+        result = Optional.of(participant1);
+        resultRepository.findByFkJudgeAndFkParticipant(withInstanceOf(Judge.class),
+            withInstanceOf(Participant.class));
+        result = Optional.of(result1);
+      }};
+
+      apiService.deleteResult(ResultDto.builder()
+          .entrantId(1)
+          .judgeName("Zach")
+          .taste(new BigDecimal(1))
+          .appearance(new BigDecimal(2))
+          .build());
+
+      new Verifications() {{
+        Result result;
+        resultRepository.delete(result = withCapture());
+
+        assertEquals(participant1, result.getFkParticipant());
+        assertEquals(judge1, result.getFkJudge());
+        assertEquals(new BigDecimal(1), result.getTaste());
+        assertEquals(new BigDecimal(2), result.getAppearance());
+      }};
+    }
+
+    @Test
+    @DisplayName("When the method is called, but the result isn't found, then error is thrown.")
+    void resultNotFound(
+        @Injectable ResultRepository resultRepository,
+        @Injectable BakeoffRepistory bakeoffRepistory,
+        @Injectable JudgeRepository judgeRepository,
+        @Injectable BakerRepository bakerRepository,
+        @Injectable ParticipantRepository participantRepository,
+        @Injectable JudgeHistoryRepository judgeHistoryRepository
+    ) {
+      Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
+      ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
+          bakeoffRepistory, participantRepository, judgeHistoryRepository, clock);
+
+      Bakeoff bakeoff1 = Bakeoff.builder()
+          .id(1)
+          .boDate(LocalDate.of(2021, 1, 1))
+          .food("Cheesecake")
+          .build();
+
+      Baker baker = createBaker(1, "Callum");
+
+      Judge judge1 = createJudge(1, "Zach");
+      Judge judge2 = createJudge(2, "Harry");
+
+      Participant participant1 = createParticipant(1, 1, "Lemon", baker, bakeoff1);
+
+      Result result2 = createResult(2, participant1, judge2, new BigDecimal(2), new BigDecimal(4));
+      participant1.setResults(List.of(result2));
+
+      baker.setParticipants(List.of(participant1));
+
+      new Expectations() {{
+        bakeoffRepistory.findByBoDate(withInstanceOf(LocalDate.class));
+        result = Optional.of(bakeoff1);
+        judgeRepository.findByJudgeName(withInstanceOf(String.class));
+        result = Optional.of(judge1);
+        participantRepository.findByEntrantIdAndFkBakeoff(withInstanceOf(Integer.class),
+            withInstanceOf(Bakeoff.class));
+        result = Optional.of(participant1);
+        resultRepository.findByFkJudgeAndFkParticipant(withInstanceOf(Judge.class),
+            withInstanceOf(Participant.class));
+        result = Optional.empty();
+      }};
+
+      NotFoundException e = assertThrows(NotFoundException.class,
+          () -> apiService.deleteResult(ResultDto.builder()
+              .entrantId(1)
+              .judgeName("Zach")
+              .taste(new BigDecimal(7))
+              .appearance(new BigDecimal(4))
+              .build())
+      );
+
+      assertEquals("Result not found for Judge: Zach and Entrant ID: 1", e.getMessage());
+    }
+
+    @Test
+    @DisplayName("When the method is called, but the participant isn't found, then error is thrown.")
+    void participantNotFound(
+        @Injectable ResultRepository resultRepository,
+        @Injectable BakeoffRepistory bakeoffRepistory,
+        @Injectable JudgeRepository judgeRepository,
+        @Injectable BakerRepository bakerRepository,
+        @Injectable ParticipantRepository participantRepository,
+        @Injectable JudgeHistoryRepository judgeHistoryRepository
+    ) {
+      Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
+      ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
+          bakeoffRepistory, participantRepository, judgeHistoryRepository, clock);
+
+      Bakeoff bakeoff1 = Bakeoff.builder()
+          .id(1)
+          .boDate(LocalDate.of(2021, 1, 1))
+          .food("Cheesecake")
+          .build();
+
+      Baker baker = createBaker(1, "Callum");
+
+      Judge judge1 = createJudge(1, "Zach");
+      Judge judge2 = createJudge(2, "Harry");
+
+      baker.setParticipants(Collections.emptyList());
+
+      new Expectations() {{
+        bakeoffRepistory.findByBoDate(withInstanceOf(LocalDate.class));
+        result = Optional.of(bakeoff1);
+        judgeRepository.findByJudgeName(withInstanceOf(String.class));
+        result = Optional.of(judge1);
+        participantRepository.findByEntrantIdAndFkBakeoff(withInstanceOf(Integer.class),
+            withInstanceOf(Bakeoff.class));
+        result = Optional.empty();
+      }};
+
+      NotFoundException e = assertThrows(NotFoundException.class,
+          () -> apiService.deleteResult(ResultDto.builder()
+              .entrantId(1)
+              .judgeName("Zach")
+              .taste(new BigDecimal(7))
+              .appearance(new BigDecimal(4))
+              .build())
+      );
+
+      assertEquals("Participant not found for Entrant ID: 1 and date: 2021-01-01", e.getMessage());
+    }
+
+    @Test
+    @DisplayName("When the method is called, but the judge isn't found, then error is thrown.")
+    void judgeNotFound(
+        @Injectable ResultRepository resultRepository,
+        @Injectable BakeoffRepistory bakeoffRepistory,
+        @Injectable JudgeRepository judgeRepository,
+        @Injectable BakerRepository bakerRepository,
+        @Injectable ParticipantRepository participantRepository,
+        @Injectable JudgeHistoryRepository judgeHistoryRepository
+    ) {
+      Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
+      ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
+          bakeoffRepistory, participantRepository, judgeHistoryRepository, clock);
+
+      Bakeoff bakeoff1 = Bakeoff.builder()
+          .id(1)
+          .boDate(LocalDate.of(2021, 1, 1))
+          .food("Cheesecake")
+          .build();
+
+      Baker baker = createBaker(1, "Callum");
+
+      baker.setParticipants(Collections.emptyList());
+
+      new Expectations() {{
+        bakeoffRepistory.findByBoDate(withInstanceOf(LocalDate.class));
+        result = Optional.of(bakeoff1);
+        judgeRepository.findByJudgeName(withInstanceOf(String.class));
+        result = Optional.empty();
+      }};
+
+      NotFoundException e = assertThrows(NotFoundException.class,
+          () -> apiService.deleteResult(ResultDto.builder()
+              .entrantId(1)
+              .judgeName("Zach")
+              .taste(new BigDecimal(7))
+              .appearance(new BigDecimal(4))
+              .build())
+      );
+
+      assertEquals("Judge cannot be found with the name: Zach", e.getMessage());
+    }
+
+    @Test
+    @DisplayName("When the method is called, but the bakeoff isn't found, then error is thrown.")
+    void bakeoffNotFound(
+        @Injectable ResultRepository resultRepository,
+        @Injectable BakeoffRepistory bakeoffRepistory,
+        @Injectable JudgeRepository judgeRepository,
+        @Injectable BakerRepository bakerRepository,
+        @Injectable ParticipantRepository participantRepository,
+        @Injectable JudgeHistoryRepository judgeHistoryRepository
+    ) {
+      Clock clock = Clock.fixed(Instant.parse("2021-01-01T10:10:10.00Z"), ZoneId.systemDefault());
+      ApiService apiService = new ApiServiceImpl(resultRepository, bakerRepository, judgeRepository,
+          bakeoffRepistory, participantRepository, judgeHistoryRepository, clock);
+
+      new Expectations() {{
+        bakeoffRepistory.findByBoDate(withInstanceOf(LocalDate.class));
+        result = Optional.empty();
+      }};
+
+      NotFoundException e = assertThrows(NotFoundException.class,
+          () -> apiService.deleteResult(ResultDto.builder()
+              .entrantId(1)
+              .judgeName("Zach")
+              .taste(new BigDecimal(7))
+              .appearance(new BigDecimal(4))
+              .build())
+      );
+
+      assertEquals("Bakeoff not found for date: 2021-01-01", e.getMessage());
     }
 
   }

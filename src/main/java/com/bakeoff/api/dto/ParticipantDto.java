@@ -2,6 +2,7 @@ package com.bakeoff.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import java.math.BigDecimal;
 import java.util.List;
 import lombok.Builder;
 import lombok.Value;
@@ -17,7 +18,7 @@ public class ParticipantDto {
   List<ResultDto> results;
   String description;
   String bakeoffDescription;
-  Integer totalTaste;
-  Integer totalAppearance;
+  BigDecimal totalTaste;
+  BigDecimal totalAppearance;
 
 }

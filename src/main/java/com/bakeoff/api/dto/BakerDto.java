@@ -1,5 +1,6 @@
 package com.bakeoff.api.dto;
 
+import java.math.BigDecimal;
 import java.util.List;
 import lombok.Builder;
 import lombok.Value;
@@ -10,7 +11,7 @@ public class BakerDto {
 
   Integer id;
   String name;
-  Integer totalTaste;
-  Integer totalAppearance;
+  BigDecimal totalTaste;
+  BigDecimal totalAppearance;
   List<ParticipantDto> events;
 }

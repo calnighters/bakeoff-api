@@ -39,4 +39,8 @@ public interface ApiService {
   void deleteBaker(String name);
 
   TotalResponseDto getTotals();
+
+  void updateResult(ResultDto resultDto);
+
+  void deleteResult(ResultDto resultDto);
 }

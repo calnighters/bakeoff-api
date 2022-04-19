@@ -98,6 +98,16 @@ public class ApiController {
     apiService.addResult(resultDto);
   }
 
+  @PutMapping(path = "/result")
+  public void updateResult(@RequestBody ResultDto resultDto) {
+    apiService.updateResult(resultDto);
+  }
+
+  @DeleteMapping(path = "/result")
+  public void deleteResult(@RequestBody ResultDto resultDto) {
+    apiService.deleteResult(resultDto);
+  }
+
   @GetMapping(path = "/totals")
   public TotalResponseDto getTotals() {
     return apiService.getTotals();

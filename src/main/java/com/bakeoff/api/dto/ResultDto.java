@@ -1,5 +1,6 @@
 package com.bakeoff.api.dto;
 
+import java.math.BigDecimal;
 import lombok.Builder;
 import lombok.Value;
 
@@ -9,6 +10,6 @@ public class ResultDto {
   
   Integer entrantId;
   String judgeName;
-  Integer appearance;
-  Integer taste;
+  BigDecimal appearance;
+  BigDecimal taste;
 }

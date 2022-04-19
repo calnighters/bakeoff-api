@@ -24,6 +24,7 @@ import com.bakeoff.api.repositories.JudgeHistoryRepository;
 import com.bakeoff.api.repositories.JudgeRepository;
 import com.bakeoff.api.repositories.ParticipantRepository;
 import com.bakeoff.api.repositories.ResultRepository;
+import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -277,6 +278,48 @@ public class ApiServiceImpl implements ApiService {
         .build();
   }
 
+  @Override
+  public void updateResult(ResultDto resultDto) {
+    Bakeoff bakeoff = bakeoffRepistory.findByBoDate(LocalDate.now(clock))
+        .orElseThrow(
+            () -> new NotFoundException("Bakeoff not found for date: " + LocalDate.now(clock)));
+    Judge judge = judgeRepository.findByJudgeName(resultDto.getJudgeName())
+        .orElseThrow(
+            () -> new NotFoundException(
+                "Judge cannot be found with the name: " + resultDto.getJudgeName()));
+    Participant participant = participantRepository.findByEntrantIdAndFkBakeoff(
+        resultDto.getEntrantId(), bakeoff).orElseThrow(() -> new NotFoundException(
+        "Participant not found for Entrant ID: " + resultDto.getEntrantId() + " and date: "
+            + LocalDate.now(clock)));
+    Result result = resultRepository.findByFkJudgeAndFkParticipant(judge, participant).orElseThrow(
+        () -> new NotFoundException(
+            "Result not found for Judge: " + judge.getJudgeName() + " and Entrant ID: "
+                + participant.getEntrantId()));
+    result.setAppearance(resultDto.getAppearance());
+    result.setTaste(resultDto.getTaste());
+    resultRepository.save(result);
+  }
+
+  @Override
+  public void deleteResult(ResultDto resultDto) {
+    Bakeoff bakeoff = bakeoffRepistory.findByBoDate(LocalDate.now(clock))
+        .orElseThrow(
+            () -> new NotFoundException("Bakeoff not found for date: " + LocalDate.now(clock)));
+    Judge judge = judgeRepository.findByJudgeName(resultDto.getJudgeName())
+        .orElseThrow(
+            () -> new NotFoundException(
+                "Judge cannot be found with the name: " + resultDto.getJudgeName()));
+    Participant participant = participantRepository.findByEntrantIdAndFkBakeoff(
+        resultDto.getEntrantId(), bakeoff).orElseThrow(() -> new NotFoundException(
+        "Participant not found for Entrant ID: " + resultDto.getEntrantId() + " and date: "
+            + LocalDate.now(clock)));
+    Result result = resultRepository.findByFkJudgeAndFkParticipant(judge, participant).orElseThrow(
+        () -> new NotFoundException(
+            "Result not found for Judge: " + judge.getJudgeName() + " and Entrant ID: "
+                + participant.getEntrantId()));
+    resultRepository.delete(result);
+  }
+
   private BakerDto bakerToDto(Baker baker) {
     return BakerDto.builder()
         .id(baker.getId())
@@ -287,20 +330,24 @@ public class ApiServiceImpl implements ApiService {
         .build();
   }
 
-  private Integer getTotalTaste(List<Participant> participants) {
+  private BigDecimal getTotalTaste(List<Participant> participants) {
     List<Result> results = new ArrayList<>();
     for (Participant participant : participants) {
       results.addAll(participant.getResults());
     }
-    return results.stream().mapToInt(Result::getTaste).sum();
+    return results.stream()
+        .map(Result::getTaste)
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
 
-  private Integer getTotalAppearance(List<Participant> participants) {
+  private BigDecimal getTotalAppearance(List<Participant> participants) {
     List<Result> results = new ArrayList<>();
     for (Participant participant : participants) {
       results.addAll(participant.getResults());
     }
-    return results.stream().mapToInt(Result::getAppearance).sum();
+    return results.stream()
+        .map(Result::getAppearance)
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
 
   private PersonDto judgeToPersonDto(Judge judge) {
