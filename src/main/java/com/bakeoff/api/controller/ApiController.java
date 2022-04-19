@@ -48,13 +48,18 @@ public class ApiController {
     return apiService.getLatestBakeoff();
   }
 
-  @PostMapping("/participant")
+  @PostMapping(path = "/participant")
   public void addParticipant(@RequestBody ParticipantDto participantDto) {
     apiService.addParticipant(participantDto);
   }
-  
-  @DeleteMapping("/participant")
-  public void deleteParticipant(@PathVariable Integer entrantId) {
+
+  @PutMapping(path = "/participant")
+  public void updateParticipant(@RequestBody ParticipantDto participantDto) {
+    apiService.updateParticipant(participantDto);
+  }
+
+  @DeleteMapping(path = "/participant")
+  public void deleteParticipant(@RequestParam Integer entrantId) {
     apiService.deleteParticipant(entrantId);
   }
 
@@ -88,11 +93,16 @@ public class ApiController {
     apiService.updateJudge(updatePersonDto);
   }
 
+  @DeleteMapping(path = "judge")
+  public void deleteJudge(@RequestParam String judgeName) {
+    apiService.deleteJudge(judgeName);
+  }
+
   @GetMapping(path = "/judge")
   public JudgeResponseDto getJudges() {
     return apiService.getJudges();
   }
-  
+
   @PostMapping(path = "/result")
   public void addResult(@RequestBody ResultDto resultDto) {
     apiService.addResult(resultDto);

@@ -43,4 +43,8 @@ public interface ApiService {
   void updateResult(ResultDto resultDto);
 
   void deleteResult(ResultDto resultDto);
+
+  void updateParticipant(ParticipantDto participantDto);
+
+  void deleteJudge(String judgeName);
 }

@@ -320,6 +320,49 @@ public class ApiServiceImpl implements ApiService {
     resultRepository.delete(result);
   }
 
+  @Override
+  public void updateParticipant(ParticipantDto participantDto) {
+    Bakeoff bakeoff = bakeoffRepistory.findByBoDate(LocalDate.now(clock))
+        .orElseThrow(
+            () -> new NotFoundException("Bakeoff not found for date: " + LocalDate.now(clock)));
+    Participant participant = participantRepository.findByEntrantIdAndFkBakeoff(
+        participantDto.getEntrantId(), bakeoff).orElseThrow(() -> new NotFoundException(
+        "Participant not found for Entrant ID: " + participantDto.getEntrantId() + " and date: "
+            + LocalDate.now(clock)));
+    Baker baker = bakerRepository.findById(participantDto.getBakerId()).orElseThrow(
+        () -> new NotFoundException("Baker not found for ID: " + participantDto.getBakerId()));
+    participant.setDescription(participantDto.getDescription());
+    participant.setFkBaker(baker);
+    participantRepository.save(participant);
+  }
+
+  @Override
+  public void deleteJudge(String judgeName) {
+    Judge placeholderJudge = judgeRepository.findByJudgeName("UNKNOWN")
+        .orElseThrow(() -> new NotFoundException("Placeholder Judge has not been found."));
+    Judge judge = judgeRepository.findByJudgeName(judgeName)
+        .orElseThrow(() -> new NotFoundException("Judge not found with name: " + judgeName));
+    List<JudgeHistory> histories = judge.getJudgeHistories().stream()
+        .map(judgeHistory -> updateJudgeHistory(judgeHistory, placeholderJudge))
+        .collect(Collectors.toList());
+    List<Result> results = judge.getResults().stream()
+        .map(result -> updateResults(result, placeholderJudge))
+        .collect(Collectors.toList());
+    judgeHistoryRepository.saveAll(histories);
+    resultRepository.saveAll(results);
+    judgeRepository.delete(judge);
+  }
+
+  private Result updateResults(Result result, Judge judge) {
+    result.setFkJudge(judge);
+    return result;
+  }
+
+  private JudgeHistory updateJudgeHistory(JudgeHistory judgeHistory, Judge judge) {
+    judgeHistory.setFkJudge(judge);
+    return judgeHistory;
+  }
+
   private BakerDto bakerToDto(Baker baker) {
     return BakerDto.builder()
         .id(baker.getId())
