@@ -35,13 +35,10 @@ jobs:
     - name: Step 5 - Build with Maven
       run: mvn clean install
 
-    - name: test
-      run: echo ${{github.ref}}
-
   release:
     runs-on: ubuntu-latest
     needs: build
-    if: github.ref == 'main'
+    if: github.ref == 'refs/head/main'
     steps:
       - name: Step 6 - Checkout for release to Herkou
         uses: actions/checkout@v2
