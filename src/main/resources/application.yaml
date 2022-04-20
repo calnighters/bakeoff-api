@@ -12,6 +12,11 @@ spring:
     hibernate:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+  security:
+    user:
+      name: BAKEOFF_USER
+      password: ${BAKEOFF_USER_PASSWORD:test}
+      roles: USER
 server:
   port: 8090
   tomcat:
@@ -35,7 +40,6 @@ server:
   ssl:
     enabled: false
 
-appsecurity:
-  bakeoff:
-    username: BAKEOFF_USER
-    password: ${BAKEOFF_USER_PASSWORD:test}
+securedroutes:
+  unsecured: ["/bakeoff", "/bakeoff/latest", "/bakeoff/totals"]
+  secured: ["/bakeoff/**"]

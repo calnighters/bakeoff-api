@@ -10,3 +10,12 @@ spring:
     hibernate:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+  security:
+    user:
+      name: BAKEOFF_USER
+      password: test
+      roles: USER
+
+securedroutes:
+  unsecured: ["/bakeoff", "/bakeoff/latest"]
+  secured: ["/bakeoff/**"]
