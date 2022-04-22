@@ -17,6 +17,9 @@ spring:
       name: BAKEOFF_USER
       password: ${BAKEOFF_USER_PASSWORD:test}
       roles: USER
+  servlet:
+    multipart:
+      max-file-size: 50MB
 server:
   port: 8090
   tomcat:
@@ -40,6 +43,13 @@ server:
   ssl:
     enabled: false
 
+aws:
+  bucketName: ${AWS_BUCKET_NAME:test-bucket}
+  accessKey: ${AWS_ACCESS_KEY:test}
+  secretKey: ${AWS_SECRET_KEY:test}
+  region: ${AWS_REGION:eu-west-1}
+  endpoint: ${AWS_ENDPOINT:http://localhost:30081}
+
 securedroutes:
-  unsecured: ["/bakeoff", "/bakeoff/latest", "/bakeoff/totals"]
-  secured: ["/bakeoff/**"]
+  unsecured: ["/bakeoff", "/bakeoff/latest", "/bakeoff/totals", "/aws/download/**"]
+  secured: ["/bakeoff/**", "/aws/**"]

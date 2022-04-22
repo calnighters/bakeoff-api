@@ -18,17 +18,17 @@ insert into JUDGE values (2,'Paul A');
 insert into JUDGE_HISTORY values (1, 1, 1);
 insert into JUDGE_HISTORY values (2, 2, 1);
 
-insert into PARTICIPANT values (1,1,1,1, 'Hippo');
-insert into PARTICIPANT values (2,2,1,2, 'Lemon');
-insert into PARTICIPANT values (3,3,1,3, 'Chocolate Orange');
-insert into PARTICIPANT values (4,4,1,4, 'Bueno');
-insert into PARTICIPANT values (5,5,1,5, 'Biscoff');
-insert into PARTICIPANT values (6,6,1,6, 'Chocolate Orange');
-insert into PARTICIPANT values (7,7,1,7, 'Mini Egg');
-insert into PARTICIPANT values (8,8,1,8, 'Triple Layered Cookie Dough');
-insert into PARTICIPANT values (9,9,1,9, 'Lemon and Raspberry');
-insert into PARTICIPANT values (10,10,1,10, 'Baked Creme Egg');
-insert into PARTICIPANT values (11,11,1,11, 'Surprise');
+insert into PARTICIPANT values (1,1,1,1, 'Hippo', NULL);
+insert into PARTICIPANT values (2,2,1,2, 'Lemon', NULL);
+insert into PARTICIPANT values (3,3,1,3, 'Chocolate Orange', NULL);
+insert into PARTICIPANT values (4,4,1,4, 'Bueno', NULL);
+insert into PARTICIPANT values (5,5,1,5, 'Biscoff', NULL);
+insert into PARTICIPANT values (6,6,1,6, 'Chocolate Orange', NULL);
+insert into PARTICIPANT values (7,7,1,7, 'Mini Egg', NULL);
+insert into PARTICIPANT values (8,8,1,8, 'Triple Layered Cookie Dough', NULL);
+insert into PARTICIPANT values (9,9,1,9, 'Lemon and Raspberry', NULL);
+insert into PARTICIPANT values (10,10,1,10, 'Baked Creme Egg', NULL);
+insert into PARTICIPANT values (11,11,1,11, 'Surprise', NULL);
 
 insert into RESULT values (1, 1, 1, 0, 7);
 insert into RESULT values (2, 1, 2, 0, 8);
@@ -64,11 +64,11 @@ insert into BAKER values (12,'Jon Vince');
 insert into BAKER values (13,'Bella');
 insert into BAKER values (14,'Adam Jones');
 
-insert into PARTICIPANT values (12,5,2,1, 'Hot Cross Muffins');
-insert into PARTICIPANT values (13,5,2,2, 'The OGs');
-insert into PARTICIPANT values (14,12,2,3, 'CST Bad Boys');
-insert into PARTICIPANT values (15,14,2,4, 'Hot Crossy Buns');
-insert into PARTICIPANT values (16,13,2,5, 'Goats Cheese');
+insert into PARTICIPANT values (12,5,2,1, 'Hot Cross Muffins', NULL);
+insert into PARTICIPANT values (13,5,2,2, 'The OGs', NULL);
+insert into PARTICIPANT values (14,12,2,3, 'CST Bad Boys', NULL);
+insert into PARTICIPANT values (15,14,2,4, 'Hot Crossy Buns', NULL);
+insert into PARTICIPANT values (16,13,2,5, 'Goats Cheese', NULL);
 
 insert into RESULT values (23, 12, 2, 6, 7);
 insert into RESULT values (24, 12, 3, 5, 5.5);

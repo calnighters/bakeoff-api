@@ -16,6 +16,13 @@ spring:
       password: test
       roles: USER
 
+aws:
+  bucketName: test-bucket
+  accessKey: test
+  secretKey: test
+  region: eu-west-1
+  endpoint: "http://localhost:4572"
+
 securedroutes:
-  unsecured: ["/bakeoff", "/bakeoff/latest"]
-  secured: ["/bakeoff/**"]
+  unsecured: ["/bakeoff", "/bakeoff/latest", "/bakeoff/totals", "/aws/download/**"]
+  secured: ["/bakeoff/**", "/aws/**"]

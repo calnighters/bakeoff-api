@@ -45,6 +45,9 @@ public class Participant {
   @Column(name = "DESCRIPTION", length = 256)
   private String description;
 
+  @Column(name = "IMAGE_NAME", length = 41)
+  private String imageName;
+
   @OneToMany(mappedBy = "fkParticipant")
   private List<Result> results;
 
