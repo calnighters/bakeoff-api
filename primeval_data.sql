@@ -22,7 +22,7 @@ insert into PARTICIPANT values (1,1,1,1, 'Hippo', '9a5440cb-0d65-4bb0-95b1-8beb8
 insert into PARTICIPANT values (2,2,1,2, 'Lemon', NULL);
 insert into PARTICIPANT values (3,3,1,3, 'Chocolate Orange', 'eda04c5a-3e38-4873-90de-a6057b1f3608');
 insert into PARTICIPANT values (4,4,1,4, 'Bueno', '4f6f8e7b-a720-4e1a-93fd-47127019269a');
-insert into PARTICIPANT values (5,5,1,5, 'Biscoff', '0e4bc5b6-459b-42b3-b843-fc4db5c5459a);
+insert into PARTICIPANT values (5,5,1,5, 'Biscoff', '0e4bc5b6-459b-42b3-b843-fc4db5c5459a');
 insert into PARTICIPANT values (6,6,1,6, 'Chocolate Orange', '6a0bf40f-365f-4b6e-916e-a8b567a39874');
 insert into PARTICIPANT values (7,7,1,7, 'Mini Egg', NULL);
 insert into PARTICIPANT values (8,8,1,8, 'Triple Layered Cookie Dough', 'c0471e36-ea4d-4053-ab4d-b74e840ad4db');
