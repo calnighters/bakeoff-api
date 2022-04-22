@@ -20,6 +20,7 @@ import java.util.UUID;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
@@ -39,6 +40,8 @@ import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 @Transactional
 @RequiredArgsConstructor
 public class AwsServiceImpl implements AwsService {
+
+  private static final String KEY_FORMAT = "BAKER%s/%s";
 
   private final S3Client s3Client;
   private final AwsConfig awsConfig;
@@ -88,10 +91,13 @@ public class AwsServiceImpl implements AwsService {
     Map<String, String> metadata = extractMetadata(file);
 
     String filename = UUID.randomUUID().toString();
-    String key = String.format("BAKER%s/%s", participant.getFkBaker().getId(), filename);
+    String oldkey = String.format(KEY_FORMAT, participant.getFkBaker().getId(),
+        participant.getImageName());
+    String newKey = String.format(KEY_FORMAT, participant.getFkBaker().getId(), filename);
 
+    delete(oldkey);
     try {
-      upload(key, metadata, file.getInputStream());
+      upload(newKey, metadata, file.getInputStream());
     } catch (IOException e) {
       throw new IllegalStateException(e);
     }
@@ -153,5 +159,13 @@ public class AwsServiceImpl implements AwsService {
           String.format("Unable to transfer file to S3 bucket bucket=%s fileName=%s reason=%s",
               awsConfig.getBucketName(), key, e.getMessage()));
     }
+  }
+
+  private void delete(String key) {
+    DeleteObjectRequest request = DeleteObjectRequest.builder()
+        .bucket(awsConfig.getBucketName())
+        .key(key)
+        .build();
+    s3Client.deleteObject(request);
   }
 }
