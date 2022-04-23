@@ -95,7 +95,10 @@ public class AwsServiceImpl implements AwsService {
         participant.getImageName());
     String newKey = String.format(KEY_FORMAT, participant.getFkBaker().getId(), filename);
 
-    delete(oldkey);
+    if (participant.getImageName() != null) {
+      delete(oldkey);
+    }
+
     try {
       upload(newKey, metadata, file.getInputStream());
     } catch (IOException e) {
